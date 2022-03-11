@@ -1,7 +1,7 @@
-import { IAppStateAction } from '../../utils/types';
+import { IAppState, IAppStateAction } from '../../utils/types';
 import { AUTH_TOKEN, PROJECTS_DATA } from '../actions/action.types';
 
-const initialState = {
+const initialState: IAppState = {
   token: undefined,
   projects: [],
   designs: [],

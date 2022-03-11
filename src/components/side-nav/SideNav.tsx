@@ -110,7 +110,7 @@ export default function SideNav() {
         height: '100%',
         flexGrow: 1,
         maxWidth: 250,
-        display: { xs: isMobile ? 'block' : 'none', md: 'block' },
+        // display: { xs: isMobile ? 'block' : 'none', md: 'block' },
       }}
     >
       {sideNavItems.map((items: SideNavItemsType) => {

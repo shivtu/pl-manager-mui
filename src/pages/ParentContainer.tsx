@@ -7,10 +7,15 @@ import LoginPage from './login/LoginPage';
 import { sideNavItems } from '../components/side-nav/sideNavHelper';
 
 import useIsMobile from '../hooks/useIsMobile';
+import CurrentProjectsPage from './projects/CurrentProjectsPage';
 
 const ParentContainer = () => {
   const [appData, setAppData] = useState<any>();
   const navigate = useNavigate();
+
+  const isMobile = useIsMobile();
+
+  const isAuthenticated = localStorage.getItem('authToken');
 
   useEffect(() => {
     if (!appData) navigate('/');
@@ -20,29 +25,31 @@ const ParentContainer = () => {
     .split(' ')[0]
     .charAt(0)}${appData?.account.name.split(' ')[1].charAt(0)}`;
 
-  const isMobile = useIsMobile();
-
   return (
     <>
-      {'appData?.accessToken' ? (
+      {isAuthenticated ? (
         <Grid
           container
           direction='row'
-          justifyContent='center'
-          alignItems='flex-start'
-          spacing={2}
+          justifyContent='flex-start'
+          alignItems='center'
+          // spacing={2}
         >
           <Grid item xs={12}>
             <ResponsiveAppBar userNameInitials={userNameInitials} />
           </Grid>
           {!isMobile && (
-            <Grid item xs={4}>
+            <Grid item>
               <SideNav />
             </Grid>
           )}
-          <Grid item xs={8}>
+          <Grid item sx={{ marginLeft: 40, position: 'static' }}>
             <Routes>
-              {sideNavItems.map((items) => {
+              <Route
+                path='/current-projects'
+                element={<CurrentProjectsPage />}
+              />
+              {/* {sideNavItems.map((items) => {
                 if (items.routeTo) {
                   return (
                     <Route
@@ -60,7 +67,7 @@ const ParentContainer = () => {
                     element={subMenutItem.component}
                   />
                 ));
-              })}
+              })} */}
             </Routes>
           </Grid>
         </Grid>

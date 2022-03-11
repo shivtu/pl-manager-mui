@@ -1,40 +1,51 @@
-import React, { FocusEventHandler } from 'react';
+import { PROJECT_STAGE, PROJECT_STATUS, PROJECT_TYPE } from './enums';
 
-export interface ISteps {
-  label: string;
-  elements: JSX.Element;
+export interface IUser {
+  _id: string;
+  userEmail: string;
+  isActive: boolean;
+  userRole: string;
 }
 
-export interface IFormField {
-  label?: string;
+interface ICurrentOwner {
+  userId: string;
   name: string;
-  helperText?: string;
-  type: 'textInput';
-  actionOnBlur?: {
-    isPromise: boolean;
-    action:
-      | Promise<any>
-      | FocusEventHandler<HTMLTextAreaElement | HTMLInputElement>
-      | undefined;
-  };
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: any;
+  email: string;
+  phoneNumber: number;
 }
 
-export interface IFormElement {
-  stepperLabel: string;
-  formFields: IFormField[];
+export interface IProjectResponseData {
+  projectRequirements: string[];
+  _id: string;
+  projectName: string;
+  summary: string;
+  description: string;
+  projectType: PROJECT_TYPE;
+  projectRequirement: string[];
+  currentOwner: ICurrentOwner;
+  stage: PROJECT_STAGE;
+  status: PROJECT_STATUS;
+  createdAt: string;
+}
+export interface IProjectResponse {
+  success: boolean;
+  count: number;
+  data: IProjectResponseData[];
 }
 
-export interface IStepperForms {
-  actionOnSubmit: () => any;
-  elements: IFormElement[];
+export interface IDesign {
+  projectId: string;
+  components: IProjectResponseData[];
+  status: PROJECT_STATUS;
+  createdAt: Date;
+  completedAt: Date;
+  currentOwner: string;
 }
 
 export interface IAppState {
   token?: string;
-  projects?: [];
-  designs?: [];
+  projects?: IProjectResponseData[];
+  designs?: IDesign[];
 }
 
 export interface IAppStateAction {

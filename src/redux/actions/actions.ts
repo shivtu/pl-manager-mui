@@ -1,4 +1,4 @@
-import { IAppState } from '../../utils/types';
+import { IAppState, IProjectResponseData } from '../../utils/types';
 import { AUTH_TOKEN, PROJECTS_DATA } from './action.types';
 
 export const updateAuthToken = (token: string) => ({
@@ -6,7 +6,7 @@ export const updateAuthToken = (token: string) => ({
   payload: { token },
 });
 
-export const updateProjects = (projects: IAppState) => ({
+export const updateProjects = (projects: IProjectResponseData[]) => ({
   type: PROJECTS_DATA,
   payload: { projects },
 });
