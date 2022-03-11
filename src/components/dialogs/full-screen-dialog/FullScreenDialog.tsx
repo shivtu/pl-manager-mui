@@ -6,7 +6,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { Grid, Button } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
+import CButton from '../../buttons/CButton';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -21,6 +22,7 @@ export default function FullScreenDialog({
   open,
   onClose,
   onSave,
+  title,
   content,
 }: {
   open: boolean;
@@ -36,7 +38,7 @@ export default function FullScreenDialog({
       onClose={onClose}
       TransitionComponent={Transition}
     >
-      <AppBar sx={{ position: 'static' }}>
+      <AppBar sx={{ position: 'relative' }}>
         <Toolbar>
           <Grid
             container
@@ -45,31 +47,28 @@ export default function FullScreenDialog({
             alignItems='center'
           >
             <Grid item>
-              <Button onClick={onClose} startIcon={<CloseIcon />} size='large'>
-                Cancel
-              </Button>
+              <CButton
+                onClick={onClose}
+                startIcon={<CloseIcon />}
+                size='large'
+                label='Cancel'
+              />
+            </Grid>
+            <Grid item>
+              <Typography variant='h5'>{title}</Typography>
             </Grid>
 
             <Grid item>
-              <Button onClick={onSave} startIcon={<CheckIcon />} size='large'>
-                Save
-              </Button>
+              <CButton
+                onClick={onSave}
+                startIcon={<CheckIcon />}
+                size='large'
+                label='Save'
+              />
             </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
-      {/* <List>
-        <ListItem button>
-          <ListItemText primary='Phone ringtone' secondary='Titania' />
-        </ListItem>
-        <Divider />
-        <ListItem button>
-          <ListItemText
-            primary='Default notification ringtone'
-            secondary='Tethys'
-          />
-        </ListItem>
-      </List> */}
       {content}
     </Dialog>
   );

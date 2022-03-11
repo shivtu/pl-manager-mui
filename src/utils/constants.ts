@@ -1,1 +1,7 @@
-export const x = {};
+import { PROJECT_TYPE } from './enums';
+
+export const PROJECT_TYPES = [
+  PROJECT_TYPE.EXISTING_MACHINE,
+  PROJECT_TYPE.RD_NEW_MACHINE,
+  PROJECT_TYPE.OTHERS,
+];

@@ -45,7 +45,7 @@ export const sideNavItems: SideNavItemsType[] = [
     subMenu: [
       {
         labelText: 'Current Projects',
-        routeTo: '/current-projects',
+        routeTo: 'projects',
         component: <CurrentProjectsPages />,
       },
       {

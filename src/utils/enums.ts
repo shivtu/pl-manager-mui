@@ -1,7 +1,7 @@
 export enum PROJECT_TYPE {
-  car = 'car',
-  bus = 'bus',
-  truck = 'truck',
+  EXISTING_MACHINE = 'Existing Machine',
+  RD_NEW_MACHINE = 'R&D New Machine',
+  OTHERS = 'Others',
 }
 
 export enum PROJECT_STAGE {

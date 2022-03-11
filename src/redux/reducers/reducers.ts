@@ -1,8 +1,13 @@
 import { IAppState, IAppStateAction } from '../../utils/types';
-import { AUTH_TOKEN, PROJECTS_DATA } from '../actions/action.types';
+import {
+  AUTH_TOKEN,
+  PROJECTS_DATA,
+  CURRENT_USER_PROFILE,
+} from '../actions/action.types';
 
 const initialState: IAppState = {
   token: undefined,
+  loggedInUser: undefined,
   projects: [],
   designs: [],
 };
@@ -16,7 +21,12 @@ export default function reducers(
       return { ...state, ...{ token: action.payload.token } };
     case PROJECTS_DATA:
       return { ...state, ...{ projects: action.payload.projects } };
+    case CURRENT_USER_PROFILE:
+      return {
+        ...state,
+        ...{ loggedInUser: action.payload.loggedInUser },
+      };
     default:
-      return state;
+      return initialState;
   }
 }

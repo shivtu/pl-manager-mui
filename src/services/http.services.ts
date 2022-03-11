@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { INewProjectData } from '../utils/types';
 import { axiosAsyncHandler } from '../utils/errorHandlers';
 
 const DOMAIN = 'http://localhost:5000';
@@ -6,23 +7,16 @@ const BASE_URI = 'api/v1/pl-manager/peenya';
 export const REST_API_SERVICES = {
   PROJECTS: {
     FIND: 'projects/find',
+    CREATE: 'projects/create',
   },
   USERS: {
     LOGIN: 'users/login',
     ME: 'users/me',
+    PROFILE_ME: 'users/profile/me',
   },
 };
 
 export const host = `${DOMAIN}/${BASE_URI}`;
-
-export const fakeService = async (scriptletName: string, accessToken: string) =>
-  axiosAsyncHandler(
-    async () =>
-      await axios({
-        url: 'https://jsonplaceholder.typicode.com/todos/1',
-        method: 'get',
-      })
-  );
 
 export const loginUser = async (userEmail: string, password: string) =>
   axiosAsyncHandler(
@@ -46,5 +40,33 @@ export const getMe = async (token: string) =>
         headers: {
           Authorization: `Bearer ${token}`,
         },
+      })
+  );
+
+export const getCurrentUserProfile = async (token: string) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'GET',
+        url: `${host}/${REST_API_SERVICES.USERS.PROFILE_ME}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+  );
+
+export const createNewProject = async (
+  token: string,
+  newProjectData: INewProjectData
+) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'POST',
+        url: `${host}/${REST_API_SERVICES.PROJECTS.CREATE}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: newProjectData,
       })
   );

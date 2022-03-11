@@ -8,5 +8,6 @@ export const createTableData = (
     projects.projectName,
     projects.summary,
     projects.stage,
+    projects.currentOwner.name,
   ]);
 };

@@ -1,2 +1,3 @@
 export const AUTH_TOKEN = 'AUTH_TOKEN';
+export const CURRENT_USER_PROFILE = 'CURRENT_USER_PROFILE';
 export const PROJECTS_DATA = 'PROJECTS_DATA';
