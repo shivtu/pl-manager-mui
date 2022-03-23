@@ -1,17 +1,30 @@
-import { PROJECT_STAGE, PROJECT_STATUS, PROJECT_TYPE } from './enums';
+import {
+  PROJECT_STAGE,
+  PROJECT_STATUS,
+  PROJECT_TASK,
+  PROJECT_TYPE,
+} from './enums';
 
-export interface IUser {
+export type UserRoleTypes =
+  | 'admin'
+  | 'designer'
+  | 'production'
+  | 'assembly'
+  | 'purchases';
+
+export interface ILoggedInUser {
   _id: string;
+  userName: string;
   userEmail: string;
   isActive: boolean;
-  userRole: string;
-}
-
-export interface ICurrentOwner {
-  userId: string;
-  name: string;
-  email: string;
-  phoneNumber: number;
+  userRole: UserRoleTypes;
+  userPhoneNumber: number;
+  userAddress: string;
+  userGovId: {
+    docType: string;
+    docId: string;
+  };
+  createdAt: Date;
 }
 
 export interface IProjectResponseData {
@@ -44,22 +57,33 @@ export interface INewProjectData {
   status: PROJECT_STATUS;
 }
 
+export interface IInfiniteListColumn {
+  id: string;
+  placeHolder: string;
+}
+
+export interface IDesignTaskData {
+  componentName: string;
+  cost?: number;
+  process: string;
+}
+
+export interface ICurrentOwner {
+  userId: string;
+  userName: string;
+  userEmail: string;
+  userPhoneNumber: number;
+}
+
 export interface IDesign {
-  projectId: string;
+  _id: string;
+  parentProjectName: string;
+  parentProjectId: string;
   components: IProjectResponseData[];
   status: PROJECT_STATUS;
   createdAt: Date;
   completedAt: Date;
-  currentOwner: string;
-}
-
-export interface ILoggedInUser {
-  email: string;
-  isActive: boolean;
-  name: string;
-  phoneNumber: number;
-  userId: string;
-  userRole: string;
+  currentOwner: ICurrentOwner;
 }
 
 export interface IAppState {
@@ -74,7 +98,37 @@ export interface IAppStateAction {
   payload: IAppState;
 }
 
-export type ProjectType =
+export interface IMessageDialogProps {
+  dialogTitle?: string;
+  dialogContent?: string;
+  dialogActions?: JSX.Element;
+  open: boolean;
+  dialogType: 'error' | 'success';
+  onClose?: () => void;
+}
+
+export type ProjectTypeTypes =
   | PROJECT_TYPE.EXISTING_MACHINE
   | PROJECT_TYPE.RD_NEW_MACHINE
   | PROJECT_TYPE.OTHERS;
+
+export type ProjectStatusTypes =
+  | PROJECT_STATUS.CREATED
+  | PROJECT_STATUS.ACCEPTED
+  | PROJECT_STATUS.COMPLETED
+  | PROJECT_STATUS.IN_PROGRESS
+  | PROJECT_STATUS.ON_HOLD;
+
+export type ProjectStageTypes =
+  | PROJECT_STAGE.CREATING_PURCHASE_ORDER
+  | PROJECT_STAGE.DELIVERY
+  | PROJECT_STAGE.DESIGNING
+  | PROJECT_STAGE.ESTIMATING_COST
+  | PROJECT_STAGE.GENESIS
+  | PROJECT_STAGE.IN_PRODUCTION;
+
+export type ProjectTaskTypes =
+  | PROJECT_TASK.ASSEMBLY
+  | PROJECT_TASK.DESIGN
+  | PROJECT_TASK.PURCHASES
+  | PROJECT_TASK.TESTING;

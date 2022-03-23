@@ -12,6 +12,7 @@ import { makeStyles } from '@mui/styles';
 import { TransitionProps } from '@mui/material/transitions';
 
 import { Button } from '@mui/material';
+import { IMessageDialogProps } from '../../../utils/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   errorBorder: {
@@ -31,14 +32,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction='down' ref={ref} {...props} />;
 });
 
-const MessageDialog = (props: {
-  dialogTitle?: string;
-  dialogContent?: string;
-  dialogActions?: JSX.Element;
-  open: boolean;
-  dialogType: 'error' | 'success';
-  onClose: () => void;
-}) => {
+const MessageDialog = (props: IMessageDialogProps) => {
   const classes = useStyles();
 
   return (

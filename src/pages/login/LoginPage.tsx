@@ -27,41 +27,48 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    setLoading(true);
+    try {
+      setLoading(true);
+      const loginResult = await loginUser(userEmail, password);
+      // If login request fails
+      if (loginResult.message) {
+        setLogginError({
+          title: `Authentication failed`,
+          message: `${
+            loginResult.message ||
+            'Sorry, we could not log you in. Please try again'
+          }`,
+        });
+        setLoginFailDialog(true);
+      }
 
-    const loginResult = await loginUser(userEmail, password);
-    // If login request fails
-    if (loginResult.message) {
+      let currentUser;
+
+      if (loginResult?.data?.token) {
+        currentUser = await getMe(loginResult.data.token);
+      }
+
+      const authData = await Promise.all([loginResult, currentUser]);
+
+      authData.forEach((v) => {
+        if (v?.data?.token) {
+          setToken(v.data.token);
+        }
+
+        if (v.data?.user) {
+          const loggedInUser: ILoggedInUser = v.data?.user;
+          setUser(loggedInUser);
+        }
+      });
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
       setLogginError({
         title: `Authentication failed`,
-        message: `${
-          loginResult.message ||
-          'Sorry, we could not log you in. Please try again'
-        }`,
+        message: `${'Sorry, an unknown error occured. Please try again'}`,
       });
       setLoginFailDialog(true);
     }
-
-    let currentUser;
-
-    if (loginResult?.data?.token) {
-      currentUser = await getMe(loginResult.data.token);
-    }
-
-    const authData = await Promise.all([loginResult, currentUser]);
-
-    authData.forEach((v) => {
-      if (v?.data?.token) {
-        setToken(v.data.token);
-      }
-
-      if (v.data?.user) {
-        const loggedInUser: ILoggedInUser = v.data?.user;
-        setUser(loggedInUser);
-      }
-    });
-
-    setLoading(false);
   };
 
   useEffect(() => {

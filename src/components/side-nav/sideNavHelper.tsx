@@ -4,6 +4,7 @@ import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import FactoryIcon from '@mui/icons-material/Factory';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { SvgIconTypeMap } from '@mui/material';
 import HomePage from '../../pages/home/HomePage';
@@ -14,6 +15,7 @@ import PendingDesignsPage from '../../pages/designs/PendingDesignsPage';
 import CompletedDesignsPage from '../../pages/designs/CompletedDesignsPage';
 import PendingPOPage from '../../pages/purchase-orders/PendingPOPage';
 import CompletedPOPage from '../../pages/purchase-orders/CompletedPOPage';
+import AnalyticsPage from '../../pages/analytics/AnalyticsPage';
 
 export type SideNavItemsType = {
   labelText: string;
@@ -35,8 +37,8 @@ export const sideNavItems: SideNavItemsType[] = [
   {
     labelText: 'Analytics',
     labelIcon: QueryStatsIcon,
-    routeTo: '/home',
-    component: <HomePage />,
+    routeTo: '/analytics',
+    component: <AnalyticsPage />,
   },
   {
     labelText: 'Projects',
@@ -95,6 +97,12 @@ export const sideNavItems: SideNavItemsType[] = [
         component: <CompletedPOPage />,
       },
     ],
+  },
+  {
+    labelText: 'Production',
+    labelIcon: FactoryIcon,
+    routeTo: '/production',
+    component: <>Production page</>,
   },
   {
     labelText: 'Assembly',

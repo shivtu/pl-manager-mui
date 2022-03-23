@@ -14,8 +14,16 @@ export enum PROJECT_STAGE {
 }
 
 export enum PROJECT_STATUS {
+  CREATED = 'Created',
   ACCEPTED = 'Accepted',
   IN_PROGRESS = 'In-Progress',
   ON_HOLD = 'On-Hold',
   COMPLETED = 'Completed',
+}
+
+export enum PROJECT_TASK {
+  DESIGN = 'Design',
+  PURCHASES = 'Purchases',
+  ASSEMBLY = 'Assembly',
+  TESTING = 'Testing',
 }

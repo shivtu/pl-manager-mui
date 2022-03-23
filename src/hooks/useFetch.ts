@@ -7,7 +7,7 @@ const useFetch = (
   headers: AxiosRequestHeaders,
   data?: any
 ) => {
-  const [result, setResult] = useState<AxiosResponse<any, any>>();
+  const [response, setResponse] = useState<AxiosResponse<any, any>>();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -20,17 +20,17 @@ const useFetch = (
       data: data,
     })
       .then((res) => {
-        setResult(res);
+        setResponse(res);
         setError(null);
       })
       .catch((err) => {
-        setResult(undefined);
+        setResponse(undefined);
         setError(err);
       })
       .finally(() => setLoading(false));
   }, [url, method]);
 
-  return { loading, result, error };
+  return { loading, response, error };
 };
 
 export default useFetch;

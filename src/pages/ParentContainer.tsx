@@ -21,6 +21,8 @@ import { useSelector } from 'react-redux';
 import { IAppState } from '../utils/types';
 import LoginPage from './login/LoginPage';
 import CreateNewProjectPage from './projects/CreateNewProjectPage';
+import AnalyticsPage from './analytics/AnalyticsPage';
+import PendingDesignsPage from './designs/PendingDesignsPage';
 
 const drawerWidth = 240;
 
@@ -170,8 +172,10 @@ export default function ParentContainer() {
       <Main open={openDrawer}>
         <DrawerHeader />
         <Routes>
+          <Route path='/analytics' element={<AnalyticsPage />} />
           <Route path='/projects' element={<CurrentProjectsPage />} />
           <Route path='/new-project' element={<CreateNewProjectPage />} />
+          <Route path='/pending-designs' element={<PendingDesignsPage />} />
         </Routes>
       </Main>
     </Box>

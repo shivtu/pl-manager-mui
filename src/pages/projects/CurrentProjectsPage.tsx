@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import MUIDataTable, { MUIDataTableProps } from 'mui-datatables';
@@ -9,11 +9,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import { IAppState, IProjectResponseData } from '../../utils/types';
 import { createTableData } from './projectsHelper';
-import { Paper } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { host, REST_API_SERVICES } from '../../services/http.services';
 import FullScreenDialog from '../../components/dialogs/full-screen-dialog/FullScreenDialog';
 import CButton from '../../components/buttons/CButton';
 import EditProjectPage from './EditProjectPage';
+import ErrorDialog from '../../components/dialogs/error-dialog/ErrorDialog';
 
 const CurrentProjectsPage = () => {
   const navigate = useNavigate();
@@ -24,8 +25,8 @@ const CurrentProjectsPage = () => {
 
   const dispatch = useDispatch();
 
-  const { result, error } = useFetch(
-    `${host}/${REST_API_SERVICES.PROJECTS.FIND}`,
+  const { loading, response, error } = useFetch(
+    `${host}/${REST_API_SERVICES.PROJECTS.FIND}?status[$ne]=Completed`,
     'get',
     { Authorization: `Bearer ${appState.token}` || '' },
     undefined
@@ -70,20 +71,19 @@ const CurrentProjectsPage = () => {
   };
 
   useEffect(() => {
-    if (result?.data) dispatch(updateProjects(result.data.data));
+    if (response?.data) dispatch(updateProjects(response.data.result));
     if (error) setErrorContent(error);
-  }, [result, error]);
+  }, [response, error]);
 
   return (
-    <Paper>
+    <>
       {errorContent && (
-        <></>
-        // <ErrorDialog
-        //   dialogTitle='Unable to find projects data'
-        //   dialogContent={`${errorContent}`}
-        //   open={true}
-        //   onClose={() => setErrorContent(undefined)}
-        // />
+        <ErrorDialog
+          dialogTitle='Unable to find projects data'
+          dialogContent={`${errorContent}`}
+          open={true}
+          onClose={() => setErrorContent(undefined)}
+        />
       )}
       {rowToEdit && (
         <FullScreenDialog
@@ -94,13 +94,17 @@ const CurrentProjectsPage = () => {
           title={`Editing : ${rowToEdit?.projectName}`}
         />
       )}
-      <MUIDataTable
-        title={'Existing Projects'}
-        data={tableData || []}
-        columns={columns}
-        options={options}
-      />
-    </Paper>
+      {loading ? (
+        <CircularProgress size={100} />
+      ) : (
+        <MUIDataTable
+          title={'Existing Projects'}
+          data={tableData || []}
+          columns={columns}
+          options={options}
+        />
+      )}
+    </>
   );
 };
 

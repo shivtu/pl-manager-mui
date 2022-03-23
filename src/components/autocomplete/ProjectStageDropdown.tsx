@@ -5,36 +5,36 @@ import {
   TextFieldProps,
 } from '@mui/material';
 import { SyntheticEvent } from 'react';
-import { PROJECT_TYPES } from '../../utils/constants';
-import { PROJECT_TYPE } from '../../utils/enums';
-import { ProjectTypeTypes } from '../../utils/types';
+import { PROJECT_STAGES } from '../../utils/constants';
+import { PROJECT_STAGE } from '../../utils/enums';
+import { ProjectStageTypes } from '../../utils/types';
 
-const ProjectTypesDropdown = ({
+const ProjectStageDropdown = ({
   onChange,
   defaultValue,
 }: {
   onChange?:
     | ((
         event: SyntheticEvent<Element, Event>,
-        value: PROJECT_TYPE | null,
+        value: PROJECT_STAGE | null,
         reason: AutocompleteChangeReason
       ) => void)
     | undefined;
-  defaultValue?: ProjectTypeTypes;
+  defaultValue?: ProjectStageTypes;
 }) => {
   return (
     <Autocomplete
       size='small'
-      options={PROJECT_TYPES}
+      options={PROJECT_STAGES}
       getOptionLabel={(option) => option}
-      defaultValue={defaultValue || PROJECT_TYPE.OTHERS}
+      defaultValue={defaultValue || PROJECT_STAGE.GENESIS}
       onChange={onChange}
       clearOnEscape
       renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
         <TextField
-          helperText='Type of project'
+          helperText='Stage of project'
           {...params}
-          label='Project type'
+          label='Project stage'
           variant='filled'
         />
       )}
@@ -42,4 +42,4 @@ const ProjectTypesDropdown = ({
   );
 };
 
-export default ProjectTypesDropdown;
+export default ProjectStageDropdown;

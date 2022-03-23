@@ -8,6 +8,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { Grid, Typography } from '@mui/material';
 import CButton from '../../buttons/CButton';
+import useIsMobile from '../../../hooks/useIsMobile';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -31,6 +32,7 @@ export default function FullScreenDialog({
   title?: string;
   content: JSX.Element;
 }) {
+  const isMobile = useIsMobile();
   return (
     <Dialog
       fullScreen
@@ -42,7 +44,7 @@ export default function FullScreenDialog({
         <Toolbar>
           <Grid
             container
-            direction='row'
+            direction={isMobile ? 'column' : 'row'}
             justifyContent='space-between'
             alignItems='center'
           >
@@ -50,7 +52,7 @@ export default function FullScreenDialog({
               <CButton
                 onClick={onClose}
                 startIcon={<CloseIcon />}
-                size='large'
+                size={isMobile ? 'small' : 'large'}
                 label='Cancel'
               />
             </Grid>
@@ -62,7 +64,7 @@ export default function FullScreenDialog({
               <CButton
                 onClick={onSave}
                 startIcon={<CheckIcon />}
-                size='large'
+                size={isMobile ? 'small' : 'large'}
                 label='Save'
               />
             </Grid>

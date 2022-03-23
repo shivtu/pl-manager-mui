@@ -13,6 +13,10 @@ export const REST_API_SERVICES = {
     LOGIN: 'users/login',
     ME: 'users/me',
     PROFILE_ME: 'users/profile/me',
+    PROFILES: 'users/profiles',
+  },
+  DESIGNS: {
+    FIND: 'designs/find',
   },
 };
 
@@ -68,5 +72,32 @@ export const createNewProject = async (
           Authorization: `Bearer ${token}`,
         },
         data: newProjectData,
+      })
+  );
+
+export const getDesignTaskForProject = async (
+  token: string,
+  projectId: string
+) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'GET',
+        url: `${host}/${REST_API_SERVICES.DESIGNS.FIND}?parentProjectId=${projectId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+  );
+
+export const getUserProfiles = async (token: string) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'GET',
+        url: `${host}/${REST_API_SERVICES.USERS.PROFILES}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
   );

@@ -50,7 +50,7 @@ const InfiniteList = ({
           aria-label='add-item'
           onClick={handleOnAddListItem}
         >
-          <AddTaskIcon />
+          <AddTaskIcon color='primary' />
         </IconButton>
       </Paper>
 
