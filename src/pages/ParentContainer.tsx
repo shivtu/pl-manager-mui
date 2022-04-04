@@ -3,26 +3,16 @@ import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
-
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import SideNav from '../components/side-nav/SideNav';
-import CurrentProjectsPage from './projects/CurrentProjectsPage';
 import { Route, Routes } from 'react-router-dom';
-import { Grid, Menu } from '@mui/material';
 import useIsMobile from '../hooks/useIsMobile';
-import UserMenu from '../components/user-menu/UserMenu';
 import { useSelector } from 'react-redux';
 import { IAppState } from '../utils/types';
 import LoginPage from './login/LoginPage';
-import CreateNewProjectPage from './projects/CreateNewProjectPage';
-import AnalyticsPage from './analytics/AnalyticsPage';
-import PendingDesignsPage from './designs/PendingDesignsPage';
 import CustomAppBar from './CustomAppBar';
 import { routes } from './RouteHelper';
 

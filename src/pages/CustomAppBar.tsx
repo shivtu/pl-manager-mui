@@ -1,5 +1,5 @@
 import { Toolbar, Grid, IconButton, Menu, Typography } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import SideNav from '../components/side-nav/SideNav';
 import UserMenu from '../components/user-menu/UserMenu';
 import MenuIcon from '@mui/icons-material/Menu';
