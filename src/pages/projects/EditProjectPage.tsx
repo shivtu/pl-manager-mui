@@ -9,6 +9,7 @@ import {
   Alert,
   AlertProps,
   Divider,
+  IconButton,
 } from '@mui/material';
 import ProjectStageDropdown from '../../components/autocomplete/ProjectStageDropdown';
 import StatusDropdown from '../../components/autocomplete/StatusDropdown';
@@ -20,31 +21,28 @@ import {
   ProjectTypeTypes,
 } from '../../utils/types';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { getDesignTaskForProject } from '../../services/http.services';
+import { getProjectTasks } from '../../services/http.services';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { PROJECT_STATUS } from '../../utils/enums';
-import CButton from '../../components/buttons/CButton';
 import AddIcon from '@mui/icons-material/Add';
+import UsersDropdown from '../../components/autocomplete/UsersDropdown';
 
 const EditProjectPage = ({
   projectDataToEdit,
 }: {
   projectDataToEdit: IProjectResponseData;
 }) => {
-  const [projectTasks, setProjectTasks] = useState({
-    design: {
-      _id: '',
-      projectId: '',
-      components: [],
-      status: '',
-      currentOwner: {},
-    },
-    purchase: {},
-    assembly: {},
-    testing: {},
-  });
+  const initProjectTasks = {
+    design: { status: '' },
+    purchase: { status: '' },
+    production: { status: '' },
+    assembly: { status: '' },
+    testing: { status: '' },
+  };
 
+  const [projectTasks, setProjectTasks] = useState(initProjectTasks);
+  const [projectTaskLoader, setProjectTaskLoader] = useState(true);
   const [fetchTasks, setFetchTasks] = useState(true);
 
   const isMobile = useIsMobile();
@@ -53,35 +51,27 @@ const EditProjectPage = ({
 
   const appState = useSelector((state: IAppState) => state);
 
-  const handlegetTasks = async () => {
+  const handleGetTasks = async () => {
     // Do not refetch the tasks multiple times
     if (fetchTasks) {
-      const designTask = await getDesignTaskForProject(
+      const tasks = await getProjectTasks(
         appState.token || '',
         projectDataToEdit._id
       );
 
-      if (!designTask.data?.result.length) {
-        setProjectTasks({
-          ...projectTasks,
-          ...{
-            design: {
-              _id: '',
-              projectId: '',
-              components: [],
-              status: 'Not created',
-              currentOwner: {},
-            },
-          },
-        });
-      } else {
-        setProjectTasks({
-          ...projectTasks,
-          ...{ design: designTask.data.result[0] },
-        });
-      }
-    }
+      const resultData = tasks.data?.result;
 
+      setProjectTasks({
+        ...projectTasks,
+        ...{ design: resultData.projectdesign },
+        ...{ purchase: resultData.projectpurchases },
+        ...{ production: resultData.projectproductiontask },
+        ...{ assembly: resultData.projectassembly },
+        ...{ testing: resultData.projecttest },
+      });
+
+      setProjectTaskLoader(false);
+    }
     // Do not fetch tasks on every click of accordian
     setFetchTasks(false);
   };
@@ -107,23 +97,23 @@ const EditProjectPage = ({
   return (
     <Grid
       container
-      direction='row'
-      justifyContent='flex-start'
-      alignItems='center'
+      direction="row"
+      justifyContent="flex-start"
+      alignItems="center"
       spacing={2}
     >
       <Grid item xs={12}>
-        <Typography variant='body1' sx={{ color: 'red' }}>
+        <Typography variant="body1" sx={{ color: 'red' }}>
           [Some fields are disabled as those cannot be edited, only active
           fields can be updated]
         </Typography>
       </Grid>
       <Grid item xs={gridItemXs}>
         <TextField
-          size='small'
-          variant='filled'
-          helperText='Name of the project'
-          label='Project name'
+          size="small"
+          variant="filled"
+          helperText="Name of the project"
+          label="Project name"
           defaultValue={projectDataToEdit.projectName}
           fullWidth
           disabled
@@ -131,10 +121,10 @@ const EditProjectPage = ({
       </Grid>
       <Grid item xs={gridItemXs}>
         <TextField
-          size='small'
-          variant='filled'
-          helperText='Name of the project'
-          label='Summary'
+          size="small"
+          variant="filled"
+          helperText="Name of the project"
+          label="Summary"
           defaultValue={projectDataToEdit.summary}
           fullWidth
           disabled
@@ -142,10 +132,10 @@ const EditProjectPage = ({
       </Grid>
       <Grid item xs={gridItemXs}>
         <TextField
-          size='small'
-          variant='filled'
-          helperText='Name of the project'
-          label='Project description'
+          size="small"
+          variant="filled"
+          helperText="Name of the project"
+          label="Project description"
           defaultValue={projectDataToEdit.description}
           fullWidth
           disabled
@@ -166,23 +156,20 @@ const EditProjectPage = ({
       </Grid>
       <Grid item xs={gridItemXs}>
         <TextField
-          size='small'
-          variant='filled'
-          helperText='Name of the project'
-          label='Date created'
+          size="small"
+          variant="filled"
+          helperText="Name of the project"
+          label="Date created"
           defaultValue={projectDataToEdit.createdAt}
           fullWidth
           disabled
         />
       </Grid>
       <Grid item xs={gridItemXs}>
-        <TextField
-          size='small'
-          variant='filled'
-          helperText='Current owner'
-          label='Current owner'
-          defaultValue={projectDataToEdit.currentOwner.userName}
-          fullWidth
+        <UsersDropdown
+          currentOwner={projectDataToEdit.currentOwner}
+          token={appState.token || ''}
+          helperText=" "
         />
       </Grid>
       <Grid item xs={gridItemXs}>
@@ -190,49 +177,88 @@ const EditProjectPage = ({
       </Grid>
       <Grid item xs={gridItemXs}>
         <StatusDropdown
-          textFieldLabel='Project status'
-          helperText='Status of the project'
+          textFieldLabel="Project status"
+          helperText="Status of the project"
         />
       </Grid>
       <Grid item xs={6}>
-        <Accordion square onChange={handlegetTasks}>
+        <Accordion square onChange={handleGetTasks}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls='project-tasks'
-            id='accordian-header'
+            aria-controls="project-tasks"
+            id="accordian-header"
           >
             <Typography>Associated tasks</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {projectTasks?.design?.status ? (
+            {projectTaskLoader ? (
+              <CircularProgress />
+            ) : (
               <>
                 <Alert
-                  severity={getAlertSeverityType(projectTasks?.design?.status)}
+                  severity={getAlertSeverityType(projectTasks.design?.status)}
+                  action={
+                    !Boolean(projectTasks.design?.status) && (
+                      <IconButton>
+                        <AddIcon />
+                      </IconButton>
+                    )
+                  }
                 >
-                  Design task: {projectTasks?.design?.status}
+                  Design task: {projectTasks.design?.status || 'Not created'}
+                </Alert>
+
+                <Divider />
+                <Alert
+                  severity={getAlertSeverityType(projectTasks.purchase?.status)}
+                  action={
+                    !Boolean(projectTasks.purchase?.status) && (
+                      <IconButton>
+                        <AddIcon />
+                      </IconButton>
+                    )
+                  }
+                >
+                  Purchase orders:
+                  {projectTasks.purchase?.status || 'Not created'}
                 </Alert>
                 <Divider />
                 <Alert
-                  severity={getAlertSeverityType(projectTasks?.design?.status)}
+                  severity={getAlertSeverityType(projectTasks.assembly?.status)}
+                  action={
+                    !Boolean(projectTasks.assembly?.status) && (
+                      <IconButton>
+                        <AddIcon />
+                      </IconButton>
+                    )
+                  }
                 >
-                  Purchase orders: {projectTasks?.design?.status}
+                  Production task:
+                  {projectTasks.production?.status || 'Not created'}
                 </Alert>
                 <Divider />
                 <Alert
-                  severity={getAlertSeverityType(projectTasks?.design?.status)}
+                  severity={getAlertSeverityType(
+                    projectTasks.production?.status
+                  )}
+                  action={
+                    !Boolean(projectTasks.production?.status) && (
+                      <IconButton>
+                        <AddIcon />
+                      </IconButton>
+                    )
+                  }
                 >
-                  Assembly work: {projectTasks?.design?.status}
+                  Assembly task:
+                  {projectTasks.assembly?.status || 'Not created'}
                 </Alert>
                 <Divider />
                 <Alert
-                  severity={getAlertSeverityType(projectTasks?.design?.status)}
+                  severity={getAlertSeverityType(projectTasks.testing?.status)}
                 >
-                  Testing: {projectTasks?.design?.status}
+                  Testing: {projectTasks?.testing?.status || 'Not created'}
                 </Alert>
-                <CButton label='Add another task' endIcon={<AddIcon />} />
               </>
-            ) : (
-              <CircularProgress />
             )}
           </AccordionDetails>
         </Accordion>

@@ -79,10 +79,10 @@ export interface IDesign {
   _id: string;
   parentProjectName: string;
   parentProjectId: string;
-  components: IProjectResponseData[];
+  components: IDesignTaskData[];
   status: PROJECT_STATUS;
   createdAt: Date;
-  completedAt: Date;
+  completedAt?: Date;
   currentOwner: ICurrentOwner;
 }
 

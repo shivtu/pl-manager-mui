@@ -1,3 +1,18 @@
+/**TODO LIST:
+ * 1. Add Purchase, Production, Assembly, Testing task list on EditProjectPage
+ * 2. Update existing project on "SAVE" button click on EditProjectPage
+ * 3. Table for completed projects
+ * 4. Table for completed designs
+ * 5. PendingPOPage
+ * 6. Completed POPage
+ * 7. ProductionPage
+ * 8. AssemblyPage
+ * 9. TEstingPage
+ * 10. ProjectCostPage
+ * 11. Analytics Page using MS sandDance
+ * 12. Add Language support
+ * 13. Keep side-menu open if not mobile view
+ */
 import { Paper } from '@mui/material';
 import { ThemeProvider, createTheme, styled } from '@mui/material/styles';
 import { green, blueGrey, red } from '@mui/material/colors';

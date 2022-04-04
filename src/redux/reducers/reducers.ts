@@ -3,6 +3,7 @@ import {
   AUTH_TOKEN,
   PROJECTS_DATA,
   CURRENT_USER_PROFILE,
+  PENDING_DESIGNS,
 } from '../actions/action.types';
 
 const initialState: IAppState = {
@@ -26,6 +27,8 @@ export default function reducers(
         ...state,
         ...{ loggedInUser: action.payload.loggedInUser },
       };
+    case PENDING_DESIGNS:
+      return { ...state, ...{ designs: action.payload.designs } };
     default:
       return initialState;
   }

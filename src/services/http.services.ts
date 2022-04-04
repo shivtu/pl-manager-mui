@@ -7,6 +7,7 @@ const BASE_URI = 'api/v1/pl-manager/peenya';
 export const REST_API_SERVICES = {
   PROJECTS: {
     FIND: 'projects/find',
+    FIND_TASKS: 'projects/find/tasks',
     CREATE: 'projects/create',
   },
   USERS: {
@@ -96,6 +97,42 @@ export const getUserProfiles = async (token: string) =>
       await axios({
         method: 'GET',
         url: `${host}/${REST_API_SERVICES.USERS.PROFILES}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+  );
+
+export const getProjectTasks = async (token: string, projectId: string) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'GET',
+        url: `${host}/${REST_API_SERVICES.PROJECTS.FIND_TASKS}/${projectId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+  );
+
+export const getIncompleteDesignTaks = async (token: string) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'GET',
+        url: `${host}/${REST_API_SERVICES.DESIGNS.FIND}?status[$ne]=Completed`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+  );
+
+export const getIncompleteProjects = async (token: string) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'GET',
+        url: `${host}/${REST_API_SERVICES.PROJECTS.FIND}?status[$ne]=Completed`,
         headers: {
           Authorization: `Bearer ${token}`,
         },

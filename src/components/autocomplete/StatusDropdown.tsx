@@ -33,7 +33,7 @@ const ProjectStatusDropdown = ({
       size='small'
       options={PROJECT_STATUSES}
       getOptionLabel={(option) => option}
-      defaultValue={defaultValue || PROJECT_STATUS.CREATED}
+      defaultValue={PROJECT_STATUSES[0]}
       onChange={onChange}
       clearOnEscape
       renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (

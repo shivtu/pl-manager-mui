@@ -3,7 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -23,6 +23,8 @@ import LoginPage from './login/LoginPage';
 import CreateNewProjectPage from './projects/CreateNewProjectPage';
 import AnalyticsPage from './analytics/AnalyticsPage';
 import PendingDesignsPage from './designs/PendingDesignsPage';
+import CustomAppBar from './CustomAppBar';
+import { routes } from './RouteHelper';
 
 const drawerWidth = 240;
 
@@ -45,27 +47,6 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }),
 }));
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
-  transition: theme.transitions.create(['margin', 'width'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -77,6 +58,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function ParentContainer() {
   const appState = useSelector((state: IAppState) => state);
+  const currentUserRole = appState.loggedInUser?.userRole;
   const theme = useTheme();
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -93,56 +75,13 @@ export default function ParentContainer() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position='fixed' open={openDrawer}>
-        <Toolbar>
-          <Grid
-            container
-            direction='row'
-            justifyContent='space-between'
-            alignItems='center'
-          >
-            <Grid item>
-              <IconButton
-                color='inherit'
-                aria-label='open drawer'
-                onClick={handleOpenNavMenu}
-                edge='start'
-                sx={{ mr: 2, ...(openDrawer && { display: 'none' }) }}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id='menu-appbar'
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                keepMounted={false}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={() => setAnchorElNav(null)}
-                sx={{
-                  display: { xs: 'flex', md: 'none' },
-                }}
-              >
-                <SideNav />
-              </Menu>
-            </Grid>
-            <Grid item>
-              <Typography variant='h6' noWrap component='div'>
-                Magnum Engineers (MUI)
-              </Typography>
-            </Grid>
-            <Grid item>
-              <UserMenu />
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
+      <CustomAppBar
+        openDrawer={openDrawer}
+        handleOpenNavMenu={handleOpenNavMenu}
+        anchorElNav={anchorElNav}
+        setAnchorElNav={setAnchorElNav}
+        drawerWidth={drawerWidth}
+      />
       <Drawer
         sx={{
           width: drawerWidth,
@@ -171,11 +110,15 @@ export default function ParentContainer() {
       </Drawer>
       <Main open={openDrawer}>
         <DrawerHeader />
+
         <Routes>
-          <Route path='/analytics' element={<AnalyticsPage />} />
-          <Route path='/projects' element={<CurrentProjectsPage />} />
-          <Route path='/new-project' element={<CreateNewProjectPage />} />
-          <Route path='/pending-designs' element={<PendingDesignsPage />} />
+          {currentUserRole && // TODO: avoid calling the map function on every render of the drawer
+            routes.map(
+              (r) =>
+                r.allowedRoles.includes(currentUserRole) && (
+                  <Route key={r.path} path={r.path} element={r.element} />
+                )
+            )}
         </Routes>
       </Main>
     </Box>
