@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { IAppState } from '../utils/types';
 import LoginPage from './login/LoginPage';
 import CustomAppBar from './CustomAppBar';
-import { routes } from './RouteHelper';
+import { sideNavItems } from '../components/side-nav/sideNavHelper';
 
 const drawerWidth = 240;
 
@@ -60,6 +60,25 @@ export default function ParentContainer() {
     isMobile ? setAnchorElNav(event.currentTarget) : setOpenDrawer(true);
   };
 
+  const router: JSX.Element[] = [];
+
+  sideNavItems.forEach((r) => {
+    if (currentUserRole && r.allowedRoles?.includes(currentUserRole)) {
+      router.push(
+        <Route key={r.routeTo} path={r.routeTo} element={r.component} />
+      );
+    }
+    if (currentUserRole && r.subMenu) {
+      r.subMenu.forEach((s) => {
+        if (s.allowedRoles?.includes(currentUserRole)) {
+          router.push(
+            <Route key={s.routeTo} path={s.routeTo} element={s.component} />
+          );
+        }
+      });
+    }
+  });
+
   if (!appState.token) return <LoginPage />;
 
   return (
@@ -100,16 +119,7 @@ export default function ParentContainer() {
       </Drawer>
       <Main open={openDrawer}>
         <DrawerHeader />
-
-        <Routes>
-          {currentUserRole && // TODO: avoid calling the map function on every render of the drawer
-            routes.map(
-              (r) =>
-                r.allowedRoles.includes(currentUserRole) && (
-                  <Route key={r.path} path={r.path} element={r.element} />
-                )
-            )}
-        </Routes>
+        <Routes>{router.map((routes) => routes)}</Routes>
       </Main>
     </Box>
   );

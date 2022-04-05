@@ -15,6 +15,7 @@ export const REST_API_SERVICES = {
     ME: 'users/me',
     PROFILE_ME: 'users/profile/me',
     PROFILES: 'users/profiles',
+    UPDATE_PASSWORD: 'users/password/reset',
   },
   DESIGNS: {
     FIND: 'designs/find',
@@ -136,5 +137,19 @@ export const getIncompleteProjects = async (token: string) =>
         headers: {
           Authorization: `Bearer ${token}`,
         },
+      })
+  );
+
+export const updateUserPassword = (passwordResetData: {
+  userEmail: string;
+  currentPassword: string;
+  password: string;
+}) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'post',
+        url: `${host}/${REST_API_SERVICES.USERS.UPDATE_PASSWORD}`,
+        data: passwordResetData,
       })
   );

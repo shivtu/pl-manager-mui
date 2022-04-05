@@ -16,6 +16,8 @@ import CompletedDesignsPage from '../../pages/designs/CompletedDesignsPage';
 import PendingPOPage from '../../pages/purchase-orders/PendingPOPage';
 import CompletedPOPage from '../../pages/purchase-orders/CompletedPOPage';
 import AnalyticsPage from '../../pages/analytics/AnalyticsPage';
+import BadgeIcon from '@mui/icons-material/Badge';
+import UserManagementPage from '../../pages/user-management/UserManagementPage';
 
 export type SideNavItemsType = {
   labelText: string;
@@ -23,12 +25,14 @@ export type SideNavItemsType = {
     | OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
         muiName: string;
       };
-  routeTo: string;
+  routeTo?: string;
+  allowedRoles?: string[];
   component?: JSX.Element;
   subMenu?: {
     labelText: string;
     labelIcon?: any;
     routeTo: string;
+    allowedRoles?: string[];
     component: JSX.Element;
   }[];
 };
@@ -38,26 +42,29 @@ export const sideNavItems: SideNavItemsType[] = [
     labelText: 'Analytics',
     labelIcon: QueryStatsIcon,
     routeTo: '/analytics',
+    allowedRoles: ['admin'],
     component: <AnalyticsPage />,
   },
   {
     labelText: 'Projects',
     labelIcon: AccountTreeIcon,
-    routeTo: '',
     subMenu: [
       {
         labelText: 'Current Projects',
         routeTo: 'projects',
+        allowedRoles: ['admin'],
         component: <CurrentProjectsPages />,
       },
       {
         labelText: 'New Projects',
         routeTo: '/new-project',
+        allowedRoles: ['admin'],
         component: <CreateNewProjectPage />,
       },
       {
         labelText: 'Completed Projects',
         routeTo: '/completed-projects',
+        allowedRoles: ['admin'],
         component: <CompletedProjectsPage />,
       },
     ],
@@ -65,17 +72,18 @@ export const sideNavItems: SideNavItemsType[] = [
   {
     labelText: 'Designs',
     labelIcon: DesignServicesIcon,
-    routeTo: '',
     subMenu: [
       {
         labelText: 'Pending Desins',
         routeTo: '/pending-designs',
+        allowedRoles: ['admin', 'designer'],
         component: <PendingDesignsPage />,
       },
 
       {
         labelText: 'Completed designs',
         routeTo: '/completed-designs',
+        allowedRoles: ['admin', 'designer'],
         component: <CompletedDesignsPage />,
       },
     ],
@@ -83,17 +91,18 @@ export const sideNavItems: SideNavItemsType[] = [
   {
     labelText: 'Purchase Orders',
     labelIcon: ShoppingCartIcon,
-    routeTo: '',
     subMenu: [
       {
         labelText: 'Pending Purchase Orders',
         routeTo: '/pending-po',
+        allowedRoles: ['admin'],
         component: <PendingPOPage />,
       },
 
       {
         labelText: 'Completed Purchase Orders',
         routeTo: '/completed-po',
+        allowedRoles: ['admin'],
         component: <CompletedPOPage />,
       },
     ],
@@ -102,18 +111,28 @@ export const sideNavItems: SideNavItemsType[] = [
     labelText: 'Production',
     labelIcon: FactoryIcon,
     routeTo: '/production',
+    allowedRoles: ['admin'],
     component: <>Production page</>,
   },
   {
     labelText: 'Assembly',
     labelIcon: PrecisionManufacturingIcon,
     routeTo: '/assembly',
+    allowedRoles: ['admin'],
     component: <>assembly</>,
   },
   {
     labelText: 'Testing',
     labelIcon: VerifiedIcon,
     routeTo: '/testing',
+    allowedRoles: ['admin'],
     component: <>Tesing</>,
+  },
+  {
+    labelText: 'User Management',
+    labelIcon: BadgeIcon,
+    routeTo: 'manage-user',
+    allowedRoles: ['admin'],
+    component: <UserManagementPage />,
   },
 ];

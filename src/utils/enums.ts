@@ -27,3 +27,12 @@ export enum PROJECT_TASK {
   ASSEMBLY = 'Assembly',
   TESTING = 'Testing',
 }
+
+export enum GOV_ID_PROOF_TYPES {
+  ADHAAR = 'adhaar',
+  PASSPORT = 'passport',
+  DRIVING_LICENSE = 'driving license',
+  PAN_CARD = 'pan card',
+  RATION_CARD = 'ration card',
+  OTHERS = 'others',
+}
