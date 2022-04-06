@@ -62,9 +62,6 @@ const RolesAndAccessDropdown = ({
           setOpen(false);
         }}
         onChange={(e: any, value: any) => handleChange(e, value)}
-        // isOptionEqualToValue={(option, value) =>
-        //   option.userName === value.userName
-        // }
         getOptionLabel={(option) => option}
         options={options}
         loading={loading}
