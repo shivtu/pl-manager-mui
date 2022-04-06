@@ -54,24 +54,23 @@ const DesignAccordionDetails = ({
   const handleItemDelete = (name: string) => {
     const i = designTasks.findIndex((t, i) => t.componentName === name);
     designTasks.splice(i, 1);
-    console.log('M::>>>', designTasks);
   };
 
   return (
     <>
       <Grid
         container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
+        direction='row'
+        justifyContent='space-between'
+        alignItems='center'
         sx={{ marginBottom: 2 }}
       >
         <Grid item>
-          <CButton label="Attach design" startIcon={<AttachFileIcon />} />
+          <CButton label='Attach design' startIcon={<AttachFileIcon />} />
         </Grid>
         <Grid item>
           <CButton
-            label="Save all"
+            label='Save all'
             endIcon={<SaveIcon />}
             onClick={handleDesignTasksUpdate}
           />
@@ -82,22 +81,22 @@ const DesignAccordionDetails = ({
         <Grid item>
           <StatusDropdown
             renderHelperText={false}
-            textFieldLabel="Design task status"
+            textFieldLabel='Design task status'
           />
         </Grid>
       </Grid>
       <Grid
         container
         direction={isMobile ? 'column' : 'row'}
-        justifyContent="space-between"
-        alignItems="center"
+        justifyContent='space-between'
+        alignItems='center'
         spacing={2}
       >
         <Grid item>
           <TextField
             fullWidth
-            size="small"
-            label="Component"
+            size='small'
+            label='Component'
             value={designTask.componentName}
             onChange={(e: React.BaseSyntheticEvent) =>
               setDesignTask({
@@ -107,7 +106,7 @@ const DesignAccordionDetails = ({
             }
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
+                <InputAdornment position='start'>
                   <ArchitectureIcon />
                 </InputAdornment>
               ),
@@ -118,8 +117,8 @@ const DesignAccordionDetails = ({
         <Grid item>
           <TextField
             fullWidth
-            size="small"
-            label="Process"
+            size='small'
+            label='Process'
             value={designTask.process}
             onChange={(e: React.BaseSyntheticEvent) =>
               setDesignTask({
@@ -129,7 +128,7 @@ const DesignAccordionDetails = ({
             }
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
+                <InputAdornment position='start'>
                   <PolylineIcon />
                 </InputAdornment>
               ),
@@ -140,8 +139,8 @@ const DesignAccordionDetails = ({
           <TextField
             type={'number'}
             fullWidth
-            size="small"
-            label="Cost"
+            size='small'
+            label='Cost'
             value={designTask.cost}
             onChange={(e: React.BaseSyntheticEvent) =>
               setDesignTask({
@@ -151,7 +150,7 @@ const DesignAccordionDetails = ({
             }
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
+                <InputAdornment position='start'>
                   <CurrencyRupeeIcon />
                 </InputAdornment>
               ),
@@ -159,16 +158,16 @@ const DesignAccordionDetails = ({
           />
         </Grid>
         <Grid item>
-          <BoldTooltip title="Add design task">
+          <BoldTooltip title='Add design task'>
             <IconButton onClick={handleAddDesignTask}>
-              <AddTaskIcon color="primary" />
+              <AddTaskIcon color='primary' />
             </IconButton>
           </BoldTooltip>
         </Grid>
       </Grid>
       {Boolean(designTasks?.length) && (
         <TableContainer>
-          <Table aria-label="added tasks">
+          <Table aria-label='added tasks'>
             <TableHead>
               <TableRow>
                 {tableCells.map((cell) => (

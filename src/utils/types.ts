@@ -113,10 +113,32 @@ export interface IUserDetails {
   userEmail: string;
   userRole: string;
   password: string;
+  confirmPassword: string;
   userPhoneNumber: string;
   userAddress: string;
+  docType: GOV_ID_PROOF_TYPES | null;
+  docId: string;
+}
+
+export interface IGovId {
   docType: string;
   docId: string;
+}
+
+export interface ICreateUserProfilePayload {
+  userName: string;
+  userEmail: string;
+  userRole: string;
+  userPhoneNumber: number;
+  userAddress: string;
+  userGovId: IGovId;
+}
+
+export interface ICreateUserPayload {
+  userEmail: string;
+  password: string;
+  userRole: string;
+  userProfile: string;
 }
 
 export type ProjectTypeTypes =

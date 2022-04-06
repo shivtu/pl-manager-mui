@@ -83,8 +83,6 @@ const LoginPage = () => {
 
       const authData = await Promise.all([loginResult, currentUser]);
 
-      console.log('>>>>', authData);
-
       authData.forEach((v) => {
         if (v?.data?.token) {
           setToken(v.data.token);

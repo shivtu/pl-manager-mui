@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Grid,
   List,
   ListItem,
@@ -13,44 +14,147 @@ import useIsMobile from '../../hooks/useIsMobile';
 import { GOV_ID_PROOF_TYPES } from '../../utils/enums';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import RolesAndAccessDropdown from '../../components/autocomplete/RolesAndAccessDropdown';
-import { IUserDetails } from '../../utils/types';
+import {
+  IAppState,
+  ICreateUserPayload,
+  ICreateUserProfilePayload,
+  IUserDetails,
+} from '../../utils/types';
+import { createUser, createUserProfile } from '../../services/http.services';
+import { useSelector } from 'react-redux';
+import PositionedSnackbar from '../../components/snack-bar/PositionedSnackbar';
+import { AlertColor } from '@mui/material/Alert';
+import { SnackbarOrigin } from '@mui/material/Snackbar';
 
 export default function AddNewUserPage() {
   const initUserDetails = {
     userName: '',
     password: '',
+    confirmPassword: '',
     userEmail: '',
     userRole: '',
     userAddress: '',
     userPhoneNumber: '',
     docId: '',
-    docType: '',
+    docType: null,
   };
+
+  const appState = useSelector((state: IAppState) => state);
 
   const isMobile = useIsMobile();
 
   const gridXs = isMobile ? 6 : 4;
 
-  const [idProofType, setIdProofType] = useState<GOV_ID_PROOF_TYPES | null>(
-    null
-  );
   const [selectedRole, setSelectedRole] = useState<string>('');
   const [accessToSelectedRole, setAccessToSelectedRole] = useState<string[]>(
     []
   );
   const [userDetails, setUserDetails] = useState<IUserDetails>(initUserDetails);
+  const [snackBar, setSnackBar] = useState<{
+    active: boolean;
+    message: string;
+    severity: AlertColor;
+    vertical: SnackbarOrigin['vertical'];
+    horizontal: SnackbarOrigin['horizontal'];
+  }>({
+    active: false,
+    message: '',
+    severity: 'error',
+    vertical: 'top',
+    horizontal: 'center',
+  });
+  const [loading, setLoading] = useState(false);
 
   const handleIDProofDropdown = (
     event: any,
     newValue: GOV_ID_PROOF_TYPES | null
   ) => {
-    setIdProofType(newValue);
+    setUserDetails({ ...userDetails, ...{ docType: newValue } });
   };
 
-  const handleAddUser = () => {};
+  const saveUserProfile = async () => {
+    const createProfilePayload: ICreateUserProfilePayload = {
+      userName: userDetails.userName,
+      userEmail: userDetails.userEmail,
+      userRole: selectedRole,
+      userPhoneNumber: Number(userDetails.userPhoneNumber),
+      userAddress: userDetails.userAddress,
+      userGovId: {
+        docType: `${userDetails.docType}`,
+        docId: userDetails.docId,
+      },
+    };
+
+    return await createUserProfile(`${appState.token}`, createProfilePayload);
+  };
+
+  const saveUser = async (userProfileId: string) => {
+    const user: ICreateUserPayload = {
+      userEmail: userDetails.userEmail,
+      password: userDetails.password,
+      userRole: selectedRole,
+      userProfile: userProfileId,
+    };
+    return await createUser(`${appState.token}`, user);
+  };
+
+  const handleAddUser = async () => {
+    if (userDetails.password !== userDetails.confirmPassword) {
+      setSnackBar({
+        ...snackBar,
+        ...{
+          active: true,
+          message: 'Passwords do not match',
+          severity: 'error',
+          vertical: 'top',
+          horizontal: 'center',
+        },
+      });
+      return;
+    } else {
+      try {
+        setLoading(true);
+        const userProfile = await saveUserProfile();
+        const user = await saveUser(userProfile.data.result._id);
+        if (user.data.success) {
+          setSnackBar({
+            active: true,
+            message: `${user.data.result.userEmail} created successfully`,
+            severity: 'success',
+            vertical: 'top',
+            horizontal: 'center',
+          });
+        }
+      } catch (error) {
+        setSnackBar({
+          ...snackBar,
+          ...{
+            active: true,
+            message: 'Unable to create user',
+            severity: 'error',
+            vertical: 'top',
+            horizontal: 'center',
+          },
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   return (
     <>
+      {loading && <CircularProgress size={200} />}
+      {snackBar.active && (
+        <PositionedSnackbar
+          open={snackBar.active}
+          message={snackBar.message}
+          handleClose={() => setSnackBar({ ...snackBar, ...{ active: false } })}
+          severity={snackBar.severity}
+          vertical={snackBar.vertical}
+          horizontal={snackBar.horizontal}
+        />
+      )}
       <Grid
         container
         direction='row'
@@ -135,6 +239,22 @@ export default function AddNewUserPage() {
           />
         </Grid>
         <Grid item xs={gridXs}>
+          <TextField
+            variant='filled'
+            size='small'
+            fullWidth
+            label='Confirm password'
+            type='password'
+            value={userDetails.confirmPassword}
+            onChange={(e: BaseSyntheticEvent) =>
+              setUserDetails({
+                ...userDetails,
+                ...{ confirmPassword: e.target.value },
+              })
+            }
+          />
+        </Grid>
+        <Grid item xs={gridXs}>
           <RolesAndAccessDropdown
             setSelectedRole={setSelectedRole}
             setAccessToSelectedRole={setAccessToSelectedRole}
@@ -149,31 +269,35 @@ export default function AddNewUserPage() {
         <Grid
           item
           xs={gridXs}
-          sx={{ display: idProofType === 'others' ? 'block' : 'none' }}
+          sx={{ display: userDetails.docType === 'others' ? 'block' : 'none' }}
         >
           <TextField
             variant='filled'
             size='small'
             fullWidth
             label='Document name'
-            value={userDetails.docType}
+            value={userDetails.docId}
             onChange={(e: BaseSyntheticEvent) =>
               setUserDetails({
                 ...userDetails,
-                ...{ docType: e.target.value },
+                ...{ docId: e.target.value },
               })
             }
           />
         </Grid>
-        <Grid xs={gridXs} item sx={{ display: idProofType ? 'block' : 'none' }}>
+        <Grid
+          xs={gridXs}
+          item
+          sx={{ display: userDetails.docType ? 'block' : 'none' }}
+        >
           <TextField
             variant='filled'
             size='small'
             fullWidth
             label={
-              idProofType === 'others'
+              userDetails.docType === 'others'
                 ? 'Document number'
-                : `${idProofType} number`
+                : `${userDetails.docType} number`
             }
             value={userDetails.docId}
             onChange={(e: BaseSyntheticEvent) =>

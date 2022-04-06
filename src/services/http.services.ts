@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { INewProjectData } from '../utils/types';
+import {
+  ICreateUserPayload,
+  ICreateUserProfilePayload,
+  INewProjectData,
+} from '../utils/types';
 import { axiosAsyncHandler } from '../utils/errorHandlers';
 
 const DOMAIN = 'http://localhost:5000';
@@ -18,6 +22,8 @@ export const REST_API_SERVICES = {
     PROFILE_ME: 'users/profile/me',
     PROFILES: 'users/profiles',
     UPDATE_PASSWORD: 'public/password/reset',
+    CREATE_PROFILE: 'users/profile/create',
+    CREATE_USER: 'users/create',
   },
   DESIGNS: {
     FIND: 'designs/find',
@@ -165,5 +171,34 @@ export const getRolesAndAccessList = () =>
       await axios({
         method: 'get',
         url: `${host}/${REST_API_SERVICES.PUBLIC.ROLES_ACCESS}`,
+      })
+  );
+
+export const createUserProfile = (
+  token: string,
+  userDetails: ICreateUserProfilePayload
+) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'post',
+        url: `${host}/${REST_API_SERVICES.USERS.CREATE_PROFILE}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: userDetails,
+      })
+  );
+
+export const createUser = (token: string, userData: ICreateUserPayload) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'post',
+        url: `${host}/${REST_API_SERVICES.USERS.CREATE_USER}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: userData,
       })
   );
