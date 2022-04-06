@@ -22,6 +22,9 @@ export const REST_API_SERVICES = {
   DESIGNS: {
     FIND: 'designs/find',
   },
+  PUBLIC: {
+    ROLES_ACCESS: 'public/roles-access',
+  },
 };
 
 export const host = `${DOMAIN}/${BASE_URI}`;
@@ -153,5 +156,14 @@ export const updateUserPassword = (passwordResetData: {
         method: 'post',
         url: `${host}/${REST_API_SERVICES.USERS.UPDATE_PASSWORD}`,
         data: passwordResetData,
+      })
+  );
+
+export const getRolesAndAccessList = () =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'get',
+        url: `${host}/${REST_API_SERVICES.PUBLIC.ROLES_ACCESS}`,
       })
   );
