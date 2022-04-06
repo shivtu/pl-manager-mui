@@ -63,19 +63,17 @@ export default function ParentContainer() {
   const router: JSX.Element[] = [];
 
   sideNavItems.forEach((r) => {
-    if (currentUserRole && r.allowedRoles?.includes(currentUserRole)) {
+    if (currentUserRole && r.allowedRoles.includes(currentUserRole)) {
       router.push(
-        <Route key={r.routeTo} path={r.routeTo} element={r.component} />
+        <Route key={r.labelText} path={r.routeTo} element={r.component} />
       );
-    }
-    if (currentUserRole && r.subMenu) {
-      r.subMenu.forEach((s) => {
-        if (s.allowedRoles?.includes(currentUserRole)) {
+      if (r.subMenu) {
+        r.subMenu.forEach((s) => {
           router.push(
-            <Route key={s.routeTo} path={s.routeTo} element={s.component} />
+            <Route key={s.labelText} path={s.routeTo} element={s.component} />
           );
-        }
-      });
+        });
+      }
     }
   });
 

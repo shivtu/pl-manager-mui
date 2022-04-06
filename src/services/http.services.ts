@@ -10,12 +10,14 @@ export const REST_API_SERVICES = {
     FIND_TASKS: 'projects/find/tasks',
     CREATE: 'projects/create',
   },
+  AUTH: {
+    LOGIN: 'auth/login',
+    ME: 'auth/me',
+  },
   USERS: {
-    LOGIN: 'users/login',
-    ME: 'users/me',
     PROFILE_ME: 'users/profile/me',
     PROFILES: 'users/profiles',
-    UPDATE_PASSWORD: 'users/password/reset',
+    UPDATE_PASSWORD: 'public/password/reset',
   },
   DESIGNS: {
     FIND: 'designs/find',
@@ -29,7 +31,7 @@ export const loginUser = async (userEmail: string, password: string) =>
     async () =>
       await axios({
         method: 'POST',
-        url: `${host}/${REST_API_SERVICES.USERS.LOGIN}`,
+        url: `${host}/${REST_API_SERVICES.AUTH.LOGIN}`,
         data: { userEmail, password },
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +44,7 @@ export const getMe = async (token: string) =>
     async () =>
       await axios({
         method: 'GET',
-        url: `${host}/${REST_API_SERVICES.USERS.ME}`,
+        url: `${host}/${REST_API_SERVICES.AUTH.ME}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },

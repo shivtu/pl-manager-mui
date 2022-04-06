@@ -26,13 +26,12 @@ export type SideNavItemsType = {
         muiName: string;
       };
   routeTo?: string;
-  allowedRoles?: string[];
+  allowedRoles: string[];
   component?: JSX.Element;
   subMenu?: {
     labelText: string;
     labelIcon?: any;
     routeTo: string;
-    allowedRoles?: string[];
     component: JSX.Element;
   }[];
 };
@@ -48,23 +47,21 @@ export const sideNavItems: SideNavItemsType[] = [
   {
     labelText: 'Projects',
     labelIcon: AccountTreeIcon,
+    allowedRoles: ['admin'],
     subMenu: [
       {
         labelText: 'Current Projects',
         routeTo: 'projects',
-        allowedRoles: ['admin'],
         component: <CurrentProjectsPages />,
       },
       {
         labelText: 'New Projects',
         routeTo: '/new-project',
-        allowedRoles: ['admin'],
         component: <CreateNewProjectPage />,
       },
       {
         labelText: 'Completed Projects',
         routeTo: '/completed-projects',
-        allowedRoles: ['admin'],
         component: <CompletedProjectsPage />,
       },
     ],
@@ -72,18 +69,17 @@ export const sideNavItems: SideNavItemsType[] = [
   {
     labelText: 'Designs',
     labelIcon: DesignServicesIcon,
+    allowedRoles: ['admin', 'designer'],
     subMenu: [
       {
         labelText: 'Pending Desins',
         routeTo: '/pending-designs',
-        allowedRoles: ['admin', 'designer'],
         component: <PendingDesignsPage />,
       },
 
       {
         labelText: 'Completed designs',
         routeTo: '/completed-designs',
-        allowedRoles: ['admin', 'designer'],
         component: <CompletedDesignsPage />,
       },
     ],
@@ -91,18 +87,17 @@ export const sideNavItems: SideNavItemsType[] = [
   {
     labelText: 'Purchase Orders',
     labelIcon: ShoppingCartIcon,
+    allowedRoles: ['admin'],
     subMenu: [
       {
         labelText: 'Pending Purchase Orders',
         routeTo: '/pending-po',
-        allowedRoles: ['admin'],
         component: <PendingPOPage />,
       },
 
       {
         labelText: 'Completed Purchase Orders',
         routeTo: '/completed-po',
-        allowedRoles: ['admin'],
         component: <CompletedPOPage />,
       },
     ],

@@ -10,6 +10,8 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import { sideNavItems, SideNavItemsType } from './sideNavHelper';
 import useIsMobile from '../../hooks/useIsMobile';
+import { useSelector } from 'react-redux';
+import { IAppState } from '../../utils/types';
 
 declare module 'react' {
   interface CSSProperties {
@@ -24,6 +26,7 @@ type StyledTreeItemProps = TreeItemProps & {
   labelIcon: React.ElementType<SvgIconProps>;
   labelInfo?: string;
   labelText: string;
+  display?: 'none' | 'block';
 };
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
@@ -61,6 +64,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
     labelIcon: LabelIcon,
     labelInfo,
     labelText,
+    display,
     ...other
   } = props;
 
@@ -91,6 +95,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       style={{
         '--tree-view-color': color,
         '--tree-view-bg-color': bgColor,
+        display: display,
       }}
       {...other}
     />
@@ -98,8 +103,10 @@ function StyledTreeItem(props: StyledTreeItemProps) {
 }
 
 export default function SideNav() {
+  const appSatate = useSelector((state: IAppState) => state);
+  const currentUserRole = appSatate.loggedInUser?.userRole;
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
+
   return (
     <TreeView
       aria-label='navigation'
@@ -123,6 +130,11 @@ export default function SideNav() {
               bgColor='#cccccc'
               color='black'
               onClick={() => items.routeTo && navigate(items.routeTo)}
+              display={
+                items.allowedRoles.includes(`${currentUserRole}`)
+                  ? 'block'
+                  : 'none'
+              }
             >
               {items.subMenu?.map((subMenuItems) => (
                 <StyledTreeItem
