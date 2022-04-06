@@ -108,6 +108,17 @@ export interface IMessageDialogProps {
   onClose?: () => void;
 }
 
+export interface IUserDetails {
+  userName: string;
+  userEmail: string;
+  userRole: string;
+  password: string;
+  userPhoneNumber: string;
+  userAddress: string;
+  docType: string;
+  docId: string;
+}
+
 export type ProjectTypeTypes =
   | PROJECT_TYPE.EXISTING_MACHINE
   | PROJECT_TYPE.RD_NEW_MACHINE
