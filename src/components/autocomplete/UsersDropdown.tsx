@@ -56,7 +56,7 @@ const UsersDropdown = ({
         <TextField
           variant='filled'
           {...params}
-          label='Assign to'
+          label='Owner'
           InputProps={{
             ...params.InputProps,
             endAdornment: (
