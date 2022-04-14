@@ -97,23 +97,23 @@ const EditProjectPage = ({
   return (
     <Grid
       container
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="center"
+      direction='row'
+      justifyContent='flex-start'
+      alignItems='center'
       spacing={2}
     >
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ color: 'red' }}>
+        <Typography variant='body1' sx={{ color: 'red' }}>
           [Some fields are disabled as those cannot be edited, only active
           fields can be updated]
         </Typography>
       </Grid>
       <Grid item xs={gridItemXs}>
         <TextField
-          size="small"
-          variant="filled"
-          helperText="Name of the project"
-          label="Project name"
+          size='small'
+          variant='filled'
+          helperText='Name of the project'
+          label='Project name'
           defaultValue={projectDataToEdit.projectName}
           fullWidth
           disabled
@@ -121,10 +121,10 @@ const EditProjectPage = ({
       </Grid>
       <Grid item xs={gridItemXs}>
         <TextField
-          size="small"
-          variant="filled"
-          helperText="Name of the project"
-          label="Summary"
+          size='small'
+          variant='filled'
+          helperText='Name of the project'
+          label='Summary'
           defaultValue={projectDataToEdit.summary}
           fullWidth
           disabled
@@ -132,10 +132,10 @@ const EditProjectPage = ({
       </Grid>
       <Grid item xs={gridItemXs}>
         <TextField
-          size="small"
-          variant="filled"
-          helperText="Name of the project"
-          label="Project description"
+          size='small'
+          variant='filled'
+          helperText='Name of the project'
+          label='Project description'
           defaultValue={projectDataToEdit.description}
           fullWidth
           disabled
@@ -156,10 +156,10 @@ const EditProjectPage = ({
       </Grid>
       <Grid item xs={gridItemXs}>
         <TextField
-          size="small"
-          variant="filled"
-          helperText="Name of the project"
-          label="Date created"
+          size='small'
+          variant='filled'
+          helperText='Name of the project'
+          label='Date created'
           defaultValue={projectDataToEdit.createdAt}
           fullWidth
           disabled
@@ -168,8 +168,7 @@ const EditProjectPage = ({
       <Grid item xs={gridItemXs}>
         <UsersDropdown
           currentOwner={projectDataToEdit.currentOwner}
-          token={appState.token || ''}
-          helperText=" "
+          helperText=' '
         />
       </Grid>
       <Grid item xs={gridItemXs}>
@@ -177,16 +176,16 @@ const EditProjectPage = ({
       </Grid>
       <Grid item xs={gridItemXs}>
         <StatusDropdown
-          textFieldLabel="Project status"
-          helperText="Status of the project"
+          textFieldLabel='Project status'
+          helperText='Status of the project'
         />
       </Grid>
       <Grid item xs={6}>
         <Accordion square onChange={handleGetTasks}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="project-tasks"
-            id="accordian-header"
+            aria-controls='project-tasks'
+            id='accordian-header'
           >
             <Typography>Associated tasks</Typography>
           </AccordionSummary>

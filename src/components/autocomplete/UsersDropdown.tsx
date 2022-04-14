@@ -1,19 +1,20 @@
 import { Autocomplete, CircularProgress, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { getUserProfiles } from '../../services/http.services';
-import { ICurrentOwner } from '../../utils/types';
+import { IAppState, ICurrentOwner } from '../../utils/types';
 
 const UsersDropdown = ({
   currentOwner,
-  token,
+
   helperText,
 }: {
   currentOwner: ICurrentOwner;
-  token: string;
   helperText?: string;
 }) => {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<ICurrentOwner[]>([currentOwner]);
+  const appState = useSelector((state: IAppState) => state);
 
   const loading = open && options.length === 0;
 
@@ -21,7 +22,7 @@ const UsersDropdown = ({
     if (!loading) return undefined;
 
     (async () => {
-      const userProfiles = await getUserProfiles(token);
+      const userProfiles = await getUserProfiles(`${appState.token}`);
 
       const userProfileList: ICurrentOwner[] = userProfiles.data.result;
 

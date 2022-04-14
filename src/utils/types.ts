@@ -63,10 +63,10 @@ export interface IInfiniteListColumn {
   placeHolder: string;
 }
 
-export interface IDesignTaskData {
+export interface IDesignTaskComponent {
   componentName: string;
-  cost?: number;
-  process: string;
+  componentBaseCost?: number;
+  processes: string;
 }
 
 export interface ICurrentOwner {
@@ -80,7 +80,7 @@ export interface IDesign {
   _id: string;
   parentProjectName: string;
   parentProjectId: string;
-  components: IDesignTaskData[];
+  components: IDesignTaskComponent[];
   status: PROJECT_STATUS;
   createdAt: Date;
   completedAt?: Date;

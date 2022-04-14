@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,46 +14,52 @@ import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import ArchitectureIcon from '@mui/icons-material/Architecture';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 import BoldTooltip from '../../components/tooltips/BoldTooltip';
 import useIsMobile from '../../hooks/useIsMobile';
-import { ICurrentOwner, IDesignTaskData } from '../../utils/types';
-import { Autocomplete, CircularProgress } from '@mui/material';
+import {
+  ICurrentOwner,
+  IDesign,
+  IDesignTaskComponent,
+} from '../../utils/types';
 import StatusDropdown from '../../components/autocomplete/StatusDropdown';
-import { getUserProfiles } from '../../services/http.services';
 import UsersDropdown from '../../components/autocomplete/UsersDropdown';
+import { Typography } from '@mui/material';
 
 const DesignAccordionDetails = ({
-  handleDesignTasksUpdate,
-  designTasks,
-  handleAddDesignTask,
-  designTask,
-  setDesignTask,
+  designComponent,
+  setDesignComponent,
+  handleAddDesignTaskComponent,
   currentOwner,
-  token,
+  designTask,
+  handleItemDelete,
 }: {
-  handleDesignTasksUpdate: () => void;
-  designTasks: IDesignTaskData[];
-  handleAddDesignTask: () => void;
-  designTask: IDesignTaskData;
-  setDesignTask: React.Dispatch<React.SetStateAction<IDesignTaskData>>;
+  designComponent: IDesignTaskComponent;
+  setDesignComponent: Dispatch<SetStateAction<IDesignTaskComponent>>;
+  handleAddDesignTaskComponent: (designTaskId: IDesign) => void;
   currentOwner: ICurrentOwner;
-  token: string;
+  designTask: IDesign;
+  handleItemDelete: (componentName: string, designTask: IDesign) => void;
 }) => {
   const isMobile = useIsMobile();
 
   const tableCells = ['Component', 'Process', 'Cost', 'Action'];
 
+  const designTaskComponents = designTask.components;
+
   const handleCurrentOwnerChange = () => {
     //
   };
 
-  const handleItemDelete = (name: string) => {
-    const i = designTasks.findIndex((t, i) => t.componentName === name);
-    designTasks.splice(i, 1);
+  const getTotal = (components: IDesignTaskComponent[]): number => {
+    const total = components
+      .map((d) => d.componentBaseCost)
+      .reduce((prev, curr) => Number(prev) + Number(curr));
+
+    if (total) return total;
+    return 0;
   };
 
   return (
@@ -72,11 +78,11 @@ const DesignAccordionDetails = ({
           <CButton
             label='Save all'
             endIcon={<SaveIcon />}
-            onClick={handleDesignTasksUpdate}
+            // onClick={handleDesignTasksUpdate}
           />
         </Grid>
         <Grid item>
-          <UsersDropdown currentOwner={currentOwner} token={token} />
+          <UsersDropdown currentOwner={currentOwner} />
         </Grid>
         <Grid item>
           <StatusDropdown
@@ -97,10 +103,10 @@ const DesignAccordionDetails = ({
             fullWidth
             size='small'
             label='Component'
-            value={designTask.componentName}
+            value={designComponent.componentName}
             onChange={(e: React.BaseSyntheticEvent) =>
-              setDesignTask({
-                ...designTask,
+              setDesignComponent({
+                ...designComponent,
                 ...{ componentName: e.target.value },
               })
             }
@@ -119,11 +125,11 @@ const DesignAccordionDetails = ({
             fullWidth
             size='small'
             label='Process'
-            value={designTask.process}
+            value={designComponent.processes}
             onChange={(e: React.BaseSyntheticEvent) =>
-              setDesignTask({
-                ...designTask,
-                ...{ process: e.target.value },
+              setDesignComponent({
+                ...designComponent,
+                ...{ processes: e.target.value },
               })
             }
             InputProps={{
@@ -141,11 +147,11 @@ const DesignAccordionDetails = ({
             fullWidth
             size='small'
             label='Cost'
-            value={designTask.cost}
+            value={designComponent.componentBaseCost}
             onChange={(e: React.BaseSyntheticEvent) =>
-              setDesignTask({
-                ...designTask,
-                ...{ cost: e.target.value },
+              setDesignComponent({
+                ...designComponent,
+                ...{ componentBaseCost: e.target.value },
               })
             }
             InputProps={{
@@ -158,16 +164,22 @@ const DesignAccordionDetails = ({
           />
         </Grid>
         <Grid item>
-          <BoldTooltip title='Add design task'>
-            <IconButton onClick={handleAddDesignTask}>
-              <AddTaskIcon color='primary' />
-            </IconButton>
-          </BoldTooltip>
+          <IconButton
+            color='primary'
+            onClick={() => handleAddDesignTaskComponent(designTask)}
+            disabled={Boolean(
+              !designComponent.processes || !designComponent.componentName
+            )}
+          >
+            <BoldTooltip title='Add design task'>
+              <AddTaskIcon />
+            </BoldTooltip>
+          </IconButton>
         </Grid>
       </Grid>
-      {Boolean(designTasks?.length) && (
+      {Boolean(designTaskComponents?.length) && (
         <TableContainer>
-          <Table aria-label='added tasks'>
+          <Table aria-label='added tasks' size='small' stickyHeader>
             <TableHead>
               <TableRow>
                 {tableCells.map((cell) => (
@@ -176,21 +188,35 @@ const DesignAccordionDetails = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {designTasks?.map((v) => (
-                <TableRow key={v.componentName}>
-                  <TableCell>{v.componentName}</TableCell>
-                  <TableCell>{v.process}</TableCell>
-                  <TableCell>{v.cost}</TableCell>
-
-                  <TableCell>
-                    <IconButton
-                      onClick={() => handleItemDelete(v.componentName)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {designTaskComponents
+                .map((v, i) => (
+                  <TableRow key={`${v.componentName}${i}`}>
+                    <TableCell>{v.componentName}</TableCell>
+                    <TableCell>{v.processes}</TableCell>
+                    <TableCell>{v.componentBaseCost}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        onClick={() =>
+                          handleItemDelete(v.componentName, designTask)
+                        }
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+                .reverse()}
+              <TableRow>
+                <TableCell />
+                <TableCell>
+                  <Typography color='blue'>TOTAL</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography color='blue'>
+                    {getTotal(designTaskComponents)}
+                  </Typography>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
