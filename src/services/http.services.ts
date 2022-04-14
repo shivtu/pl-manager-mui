@@ -17,11 +17,11 @@ export const REST_API_SERVICES = {
   AUTH: {
     LOGIN: 'auth/login',
     ME: 'auth/me',
+    UPDATE_PASSWORD: 'auth/password/reset',
   },
   USERS: {
     PROFILE_ME: 'users/profile/me',
     PROFILES: 'users/profiles',
-    UPDATE_PASSWORD: 'public/password/reset',
     CREATE_PROFILE: 'users/profile/create',
     CREATE_USER: 'users/create',
   },
@@ -160,7 +160,7 @@ export const updateUserPassword = (passwordResetData: {
     async () =>
       await axios({
         method: 'post',
-        url: `${host}/${REST_API_SERVICES.USERS.UPDATE_PASSWORD}`,
+        url: `${host}/${REST_API_SERVICES.AUTH.UPDATE_PASSWORD}`,
         data: passwordResetData,
       })
   );

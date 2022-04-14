@@ -7,11 +7,12 @@
  * 6. Completed POPage
  * 7. ProductionPage
  * 8. AssemblyPage
- * 9. TEstingPage
+ * 9. TestingPage
  * 10. ProjectCostPage
  * 11. Analytics Page using MS sandDance
  * 12. Add Language support
  * 13. Keep side-menu open if not mobile view
+ * 14. Error boundary
  */
 import { Paper } from '@mui/material';
 import { ThemeProvider, createTheme, styled } from '@mui/material/styles';
