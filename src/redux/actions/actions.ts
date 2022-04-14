@@ -21,7 +21,7 @@ export const updateProjects = (projects: IAppState) => ({
   payload: { projects },
 });
 
-export const updateProjectDesigns = (designs: IAppState) => ({
+export const updateProjectDesigns = (designs: IDesign[]) => ({
   type: PENDING_DESIGNS,
   payload: { designs },
 });

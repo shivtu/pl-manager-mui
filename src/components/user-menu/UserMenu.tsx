@@ -4,7 +4,7 @@ import Avatar from '@mui/material/Avatar';
 
 const UserMenu = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+  const settings = ['Profile', 'Logout'];
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
