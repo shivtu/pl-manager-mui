@@ -6,12 +6,21 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IAppState, IDesign, IDesignTaskComponent } from '../../utils/types';
 import DesignAccordionDetails from './DesignAccordionDetails';
-import { getIncompleteDesignTaks } from '../../services/http.services';
+import {
+  getIncompleteDesignTaks,
+  getIncompleteProjects,
+} from '../../services/http.services';
 import { useDispatch, useSelector } from 'react-redux';
 import { CircularProgress } from '@mui/material';
 import ErrorDialog from '../../components/dialogs/error-dialog/ErrorDialog';
 import PositionedSnackbar from '../../components/snack-bar/PositionedSnackbar';
-import { updateProjectDesigns } from '../../redux/actions/actions';
+import {
+  updateProjectDesigns,
+  updateProjects,
+} from '../../redux/actions/actions';
+import CButton from '../../components/buttons/CButton';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import TemporaryDrawer from '../../components/drawer/TemporaryDrawer';
 
 const PendingDesignsPage = () => {
   const initDesignTaskComponent = {
@@ -32,6 +41,11 @@ const PendingDesignsPage = () => {
   const [openErrorDialog, setOpenErrorDialog] = useState(false);
   const [errorSnackBar, setErrorSnackBar] = useState(false);
   const [expanded, setExpanded] = useState<string | false>(false);
+  const [projectRequirements, setProjectRequirements] = useState<{
+    visible: boolean;
+    data: string[];
+    parentProjectName: string | false;
+  }>({ visible: false, data: [], parentProjectName: expanded });
 
   const handleDesignTasksUpdate = () => {
     //
@@ -71,10 +85,11 @@ const PendingDesignsPage = () => {
   };
 
   const handleAccordianToggle =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    (currentPanel: IDesign) =>
+    (event: React.SyntheticEvent, isExpanded: boolean) => {
       // Empty the designComponent state so yhat it doesn't show in the input box of other accordian
       setDesignComponent(initDesignTaskComponent);
-      setExpanded(isExpanded ? panel : false);
+      setExpanded(isExpanded ? currentPanel.parentProjectName : false);
     };
 
   const handleItemDelete = (componentName: string, design: IDesign) => {
@@ -89,6 +104,20 @@ const PendingDesignsPage = () => {
       return d;
     });
     dispatch(updateProjectDesigns(updatedDesigns));
+  };
+
+  const handleDrawerToggle = async () => {
+    if (!appState.projects?.length) {
+      const projects = await getIncompleteProjects(appState.token || '');
+      dispatch(updateProjects(projects.data.result));
+    }
+    const requiremenList = appState.projects?.find(
+      (p) => p.projectName === expanded
+    )?.projectRequirements;
+    setProjectRequirements({
+      ...projectRequirements,
+      ...{ visible: true, data: requiremenList || [] },
+    });
   };
 
   useEffect(() => {
@@ -113,6 +142,21 @@ const PendingDesignsPage = () => {
 
   return (
     <>
+      {
+        <TemporaryDrawer
+          drawerAnchor='right'
+          open={projectRequirements.visible}
+          projectRequirements={projectRequirements}
+          setProjectRequirements={setProjectRequirements}
+        />
+      }
+      <CButton
+        variant='text'
+        label='Show project Requirement list'
+        endIcon={<FormatListNumberedIcon />}
+        onClick={handleDrawerToggle}
+      />
+
       {errorSnackBar && (
         <PositionedSnackbar
           open={errorSnackBar}
@@ -137,8 +181,8 @@ const PendingDesignsPage = () => {
             key={dt._id}
             TransitionProps={{ unmountOnExit: true }}
             disableGutters
-            expanded={expanded === `panel${i}`}
-            onChange={handleAccordianToggle(`panel${i}`)}
+            expanded={expanded === dt.parentProjectName}
+            onChange={handleAccordianToggle(dt)}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
