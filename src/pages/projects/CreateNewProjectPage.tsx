@@ -102,7 +102,7 @@ const CreateNewProjectPage = () => {
         const res = newProject.data.result;
         setResponseDialog({
           dialogTitle: `${res.projectName} created!`,
-          dialogContent: `Summary: ${res.summary}, Assigned to: ${res.currentOwner.name} `,
+          dialogContent: `Summary: ${res.summary}, Assigned to: ${res.currentOwner.userName} `,
           open: true,
           dialogType: 'success',
         });
