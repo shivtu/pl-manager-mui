@@ -5,6 +5,7 @@ export const axiosAsyncHandler = async (fn: any) => {
   } catch (error: any) {
     if (error.response.status === 401) {
       // handle re-login
+      window.location.reload();
     }
     return error.response;
   }
