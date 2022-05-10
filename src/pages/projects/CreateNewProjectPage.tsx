@@ -19,13 +19,15 @@ import {
 } from '../../utils/types';
 import { PROJECT_STAGE, PROJECT_STATUS, PROJECT_TYPE } from '../../utils/enums';
 import useIsMobile from '../../hooks/useIsMobile';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createNewProject } from '../../services/http.services';
 import ProjectTypesDropdown from '../../components/autocomplete/ProjectTypesDropdown';
 import MessageDialog from '../../components/dialogs/message-dialog/MessageDialog';
+import { updateProjects } from '../../redux/actions/actions';
 
 const CreateNewProjectPage = () => {
+  const dispatch = useDispatch();
   const appState = useSelector((state: IAppState) => state);
   const navigate = useNavigate();
 
@@ -106,6 +108,10 @@ const CreateNewProjectPage = () => {
           open: true,
           dialogType: 'success',
         });
+        const updatedProjects = appState.projects
+          ? [...appState.projects, res]
+          : [res];
+        dispatch(updateProjects(updatedProjects));
         setnewProjectData(initNewProjectData);
         setListItem('');
         setLoader(false);

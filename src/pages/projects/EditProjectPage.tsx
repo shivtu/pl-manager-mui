@@ -63,7 +63,7 @@ const EditProjectPage = ({
 
       setProjectTasks({
         ...projectTasks,
-        ...{ design: resultData.projectdesign },
+        ...{ design: resultData.projectdesigntask },
         ...{ purchase: resultData.projectpurchases },
         ...{ production: resultData.projectproductiontask },
         ...{ assembly: resultData.projectassembly },
@@ -254,6 +254,13 @@ const EditProjectPage = ({
                 <Divider />
                 <Alert
                   severity={getAlertSeverityType(projectTasks.testing?.status)}
+                  action={
+                    !Boolean(projectTasks.production?.status) && (
+                      <IconButton>
+                        <AddIcon />
+                      </IconButton>
+                    )
+                  }
                 >
                   Testing: {projectTasks?.testing?.status || 'Not created'}
                 </Alert>

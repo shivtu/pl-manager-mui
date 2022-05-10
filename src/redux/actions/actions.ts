@@ -1,4 +1,8 @@
-import { IAppState, IDesign, ILoggedInUser } from '../../utils/types';
+import {
+  IDesign,
+  ILoggedInUser,
+  IProjectResponseData,
+} from '../../utils/types';
 import {
   AUTH_TOKEN,
   CURRENT_USER_PROFILE,
@@ -16,7 +20,7 @@ export const updateLoggedInUser = (loggedInUser: ILoggedInUser) => ({
   payload: { loggedInUser },
 });
 
-export const updateProjects = (projects: IAppState) => ({
+export const updateProjects = (projects: IProjectResponseData[]) => ({
   type: PROJECTS_DATA,
   payload: { projects },
 });

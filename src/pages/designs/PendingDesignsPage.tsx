@@ -150,12 +150,14 @@ const PendingDesignsPage = () => {
           setProjectRequirements={setProjectRequirements}
         />
       }
-      <CButton
-        variant='text'
-        label='Show project Requirement list'
-        endIcon={<FormatListNumberedIcon />}
-        onClick={handleDrawerToggle}
-      />
+      {Boolean(getCurrentUsersDesignTasks()?.length) && (
+        <CButton
+          variant='text'
+          label='Show project Requirement list'
+          endIcon={<FormatListNumberedIcon />}
+          onClick={handleDrawerToggle}
+        />
+      )}
 
       {errorSnackBar && (
         <PositionedSnackbar

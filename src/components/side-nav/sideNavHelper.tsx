@@ -7,7 +7,6 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import FactoryIcon from '@mui/icons-material/Factory';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { SvgIconTypeMap } from '@mui/material';
-import HomePage from '../../pages/home/HomePage';
 import CurrentProjectsPages from '../../pages/projects/CurrentProjectsPage';
 import CreateNewProjectPage from '../../pages/projects/CreateNewProjectPage';
 import CompletedProjectsPage from '../../pages/projects/CompletedProjectsPage';
@@ -18,6 +17,8 @@ import CompletedPOPage from '../../pages/purchase-orders/CompletedPOPage';
 import AnalyticsPage from '../../pages/analytics/AnalyticsPage';
 import BadgeIcon from '@mui/icons-material/Badge';
 import UserManagementPage from '../../pages/user-management/UserManagementPage';
+import EnquiryPage from '../../pages/enquiry/EnquiryPage';
+import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 
 export type SideNavItemsType = {
   labelText: string;
@@ -43,6 +44,13 @@ export const sideNavItems: SideNavItemsType[] = [
     routeTo: '/analytics',
     allowedRoles: ['admin'],
     component: <AnalyticsPage />,
+  },
+  {
+    labelText: 'Enquiry',
+    labelIcon: ContactSupportIcon,
+    routeTo: '/enquiry',
+    allowedRoles: ['admin'],
+    component: <EnquiryPage />,
   },
   {
     labelText: 'Projects',

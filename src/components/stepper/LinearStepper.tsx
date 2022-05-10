@@ -1,93 +1,94 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
-import { StepContent, Grid, Typography } from '@mui/material';
-import StyledTextField from '../text-field/StyledTextField';
+import Typography from '@mui/material/Typography';
+import useIsMobile from '../../hooks/useIsMobile';
+import { Grid } from '@mui/material';
 
 export default function LinearStepper(props: {
-  orientation: 'vertical' | 'horizontal';
-  // TODO: Add types for steps
-  steps: any[];
+  steps: { stepperLabel: string; stepperContent: JSX.Element }[];
 }) {
-  const [activeStep, setActiveStep] = useState(0);
-  const [currentForm, setCurrentForm] = useState(props.steps[0]);
+  const isMobile = useIsMobile();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [currentStepContent, setCurrentStepContent] =
+    React.useState<JSX.Element>(props.steps[0].stepperContent);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep < props.steps.length - 1) {
+      setCurrentStepContent(props.steps[activeStep + 1].stepperContent);
+    }
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setCurrentStepContent(props.steps[activeStep - 1].stepperContent);
   };
 
-  useEffect(() => {
-    setCurrentForm(props.steps[activeStep]);
-  }, [activeStep]);
+  const handleReset = () => {
+    setActiveStep(0);
+    setCurrentStepContent(props.steps[0].stepperContent);
+  };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep} orientation={props.orientation}>
-        {props.steps.map((step, index) => {
-          const stepProps: { completed?: boolean } = {};
-          const labelProps: {
-            optional?: React.ReactNode;
-          } = {};
-          return (
-            <Step key={step.label} {...stepProps}>
-              <StepLabel {...labelProps}>{step.label}</StepLabel>
-              {props.orientation === 'vertical' && (
-                <StepContent>
-                  {currentForm?.elements}
-                  <Box sx={{ mb: 2 }}>
-                    <div>
-                      <Button
-                        variant='contained'
-                        onClick={handleNext}
-                        sx={{ mt: 1, mr: 1 }}
-                      >
-                        {index === props.steps.length - 1
-                          ? 'Finish'
-                          : 'Continue'}
-                      </Button>
-                      <Button
-                        disabled={index === 0}
-                        onClick={handleBack}
-                        sx={{ mt: 1, mr: 1 }}
-                      >
-                        Back
-                      </Button>
-                    </div>
-                  </Box>
-                </StepContent>
-              )}
-            </Step>
-          );
-        })}
-      </Stepper>
+    <Box
+      sx={{ width: '100%' }}
+      style={{ display: isMobile ? 'flex' : 'block' }}
+    >
+      <Grid>
+        <Stepper
+          activeStep={activeStep}
+          orientation={isMobile ? 'vertical' : 'horizontal'}
+        >
+          {props.steps.map((eachStep, index) => {
+            const stepProps: { completed?: boolean } = {};
+            const labelProps: {
+              optional?: React.ReactNode;
+            } = {};
 
-      {props.orientation === 'horizontal' && (
-        <>
-          {currentForm?.elements}
+            return (
+              <Step key={eachStep.stepperLabel} {...stepProps}>
+                <StepLabel {...labelProps}>{eachStep.stepperLabel}</StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
+      </Grid>
+      <Grid>
+        {activeStep === props.steps.length ? (
+          <React.Fragment>
+            <Typography sx={{ mt: 2, mb: 1 }}>
+              All steps completed - you&apos;re finished
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Box sx={{ flex: '1 1 auto' }} />
+              <Button onClick={handleReset}>Reset</Button>
+            </Box>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <Typography sx={{ mt: 2, mb: 1 }}>{currentStepContent}</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Button
+                color='inherit'
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ mr: 1 }}
+              >
+                Back
+              </Button>
+              <Box sx={{ flex: '1 1 auto' }} />
 
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color='inherit'
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button variant='contained' onClick={handleNext}>
-              {activeStep === props.steps.length - 1 ? 'Submit' : 'Next'}
-            </Button>
-          </Box>
-        </>
-      )}
+              <Button onClick={handleNext}>
+                {activeStep === props.steps.length - 1 ? 'Submit' : 'Next'}
+              </Button>
+            </Box>
+          </React.Fragment>
+        )}
+      </Grid>
     </Box>
   );
 }
