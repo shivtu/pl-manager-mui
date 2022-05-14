@@ -8,30 +8,26 @@ import Typography from '@mui/material/Typography';
 import useIsMobile from '../../hooks/useIsMobile';
 import { Grid } from '@mui/material';
 
-export default function LinearStepper(props: {
-  steps: { stepperLabel: string; stepperContent: JSX.Element }[];
-}) {
+interface ILenearStepperProps {
+  steps: { stepperLabel: string }[];
+  disableStepperBtn?: boolean;
+  handleNext: () => void;
+  handleBack: () => void;
+  handleReset: () => void;
+  activeStep: number;
+  currentStepContent: JSX.Element;
+}
+
+export default function LinearStepper({
+  steps,
+  disableStepperBtn,
+  handleNext,
+  handleBack,
+  handleReset,
+  activeStep,
+  currentStepContent,
+}: ILenearStepperProps) {
   const isMobile = useIsMobile();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [currentStepContent, setCurrentStepContent] =
-    React.useState<JSX.Element>(props.steps[0].stepperContent);
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (activeStep < props.steps.length - 1) {
-      setCurrentStepContent(props.steps[activeStep + 1].stepperContent);
-    }
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    setCurrentStepContent(props.steps[activeStep - 1].stepperContent);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-    setCurrentStepContent(props.steps[0].stepperContent);
-  };
 
   return (
     <Box
@@ -43,7 +39,7 @@ export default function LinearStepper(props: {
           activeStep={activeStep}
           orientation={isMobile ? 'vertical' : 'horizontal'}
         >
-          {props.steps.map((eachStep, index) => {
+          {steps.map((eachStep, index) => {
             const stepProps: { completed?: boolean } = {};
             const labelProps: {
               optional?: React.ReactNode;
@@ -58,8 +54,8 @@ export default function LinearStepper(props: {
         </Stepper>
       </Grid>
       <Grid>
-        {activeStep === props.steps.length ? (
-          <React.Fragment>
+        {activeStep === steps.length ? (
+          <>
             <Typography sx={{ mt: 2, mb: 1 }}>
               All steps completed - you&apos;re finished
             </Typography>
@@ -67,10 +63,10 @@ export default function LinearStepper(props: {
               <Box sx={{ flex: '1 1 auto' }} />
               <Button onClick={handleReset}>Reset</Button>
             </Box>
-          </React.Fragment>
+          </>
         ) : (
-          <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>{currentStepContent}</Typography>
+          <>
+            <>{currentStepContent}</>
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Button
                 color='inherit'
@@ -82,11 +78,14 @@ export default function LinearStepper(props: {
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
 
-              <Button onClick={handleNext}>
-                {activeStep === props.steps.length - 1 ? 'Submit' : 'Next'}
+              <Button
+                onClick={handleNext}
+                disabled={disableStepperBtn ? disableStepperBtn : false}
+              >
+                {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
               </Button>
             </Box>
-          </React.Fragment>
+          </>
         )}
       </Grid>
     </Box>

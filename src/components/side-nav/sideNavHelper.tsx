@@ -17,8 +17,9 @@ import CompletedPOPage from '../../pages/purchase-orders/CompletedPOPage';
 import AnalyticsPage from '../../pages/analytics/AnalyticsPage';
 import BadgeIcon from '@mui/icons-material/Badge';
 import UserManagementPage from '../../pages/user-management/UserManagementPage';
-import EnquiryPage from '../../pages/enquiry/EnquiryPage';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
+import NewEnquiryPage from '../../pages/enquiry/new-enquiry/NewEnquiryPage';
+import EnquiriesAwaitingApprovalPage from '../../pages/enquiry/awaiting-approval/EnquiriesAwaitingApprovalPage';
 
 export type SideNavItemsType = {
   labelText: string;
@@ -41,16 +42,26 @@ export const sideNavItems: SideNavItemsType[] = [
   {
     labelText: 'Analytics',
     labelIcon: QueryStatsIcon,
-    routeTo: '/analytics',
+    routeTo: 'analytics',
     allowedRoles: ['admin'],
     component: <AnalyticsPage />,
   },
   {
     labelText: 'Enquiry',
     labelIcon: ContactSupportIcon,
-    routeTo: '/enquiry',
     allowedRoles: ['admin'],
-    component: <EnquiryPage />,
+    subMenu: [
+      {
+        labelText: 'New enquiry',
+        routeTo: 'new-enquiry',
+        component: <NewEnquiryPage />,
+      },
+      {
+        labelText: 'Awaiting approval',
+        routeTo: 'enquiries-pending-approval',
+        component: <EnquiriesAwaitingApprovalPage />,
+      },
+    ],
   },
   {
     labelText: 'Projects',
@@ -59,7 +70,7 @@ export const sideNavItems: SideNavItemsType[] = [
     subMenu: [
       {
         labelText: 'Current Projects',
-        routeTo: 'projects',
+        routeTo: 'current-projects',
         component: <CurrentProjectsPages />,
       },
       {
@@ -80,7 +91,7 @@ export const sideNavItems: SideNavItemsType[] = [
     allowedRoles: ['admin', 'designer'],
     subMenu: [
       {
-        labelText: 'Pending Desins',
+        labelText: 'Pending Designs',
         routeTo: '/pending-designs',
         component: <PendingDesignsPage />,
       },

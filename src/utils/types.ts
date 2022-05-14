@@ -141,6 +141,17 @@ export interface ICreateUserPayload {
   userProfile: string;
 }
 
+export interface ICustomer {
+  _id: string | undefined;
+  customerName: string | undefined;
+  customerPhone: number | undefined;
+  customerEmail: string | undefined;
+  customerAddress?: string | undefined;
+  customerOrganization: string | undefined;
+  projects: string[] | undefined;
+  createdAt: Date | undefined;
+}
+
 export type ProjectTypeTypes =
   | PROJECT_TYPE.EXISTING_MACHINE
   | PROJECT_TYPE.RD_NEW_MACHINE

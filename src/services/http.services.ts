@@ -31,6 +31,9 @@ export const REST_API_SERVICES = {
   PUBLIC: {
     ROLES_ACCESS: 'public/roles-access',
   },
+  CUSTOMERS: {
+    FIND: 'customers/find',
+  },
 };
 
 export const host = `${DOMAIN}/${BASE_URI}`;
@@ -109,6 +112,18 @@ export const getUserProfiles = async (token: string) =>
       await axios({
         method: 'GET',
         url: `${host}/${REST_API_SERVICES.USERS.PROFILES}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+  );
+
+export const getCustomers = async (token: string) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'GET',
+        url: `${host}/${REST_API_SERVICES.CUSTOMERS.FIND}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
