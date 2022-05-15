@@ -1,5 +1,6 @@
 import { Grid, TextField, Typography } from '@mui/material';
 import { BaseSyntheticEvent, Dispatch, SetStateAction } from 'react';
+import { useStyles } from '../../../styles';
 
 const CustomerRequirements = ({
   customerRequirements,
@@ -16,9 +17,10 @@ const CustomerRequirements = ({
     }>
   >;
 }) => {
+  const classes = useStyles();
   return (
     <>
-      <Typography style={{ marginTop: '16px' }} variant='h5'>
+      <Typography className={classes.formTitle} variant='h5'>
         Add customer requirements
       </Typography>
 

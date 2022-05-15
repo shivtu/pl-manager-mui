@@ -25,6 +25,7 @@ import { useSelector } from 'react-redux';
 import PositionedSnackbar from '../../components/snack-bar/PositionedSnackbar';
 import { AlertColor } from '@mui/material/Alert';
 import { SnackbarOrigin } from '@mui/material/Snackbar';
+import { useStyles } from '../../styles';
 
 export default function AddNewUserPage() {
   const initUserDetails = {
@@ -38,6 +39,8 @@ export default function AddNewUserPage() {
     docId: '',
     docType: null,
   };
+
+  const classes = useStyles();
 
   const appState = useSelector((state: IAppState) => state);
 
@@ -144,6 +147,9 @@ export default function AddNewUserPage() {
 
   return (
     <>
+      <Typography className={classes.formTitle} variant='h5'>
+        Add a new user
+      </Typography>
       {loading && <CircularProgress size={200} />}
       {snackBar.active && (
         <PositionedSnackbar

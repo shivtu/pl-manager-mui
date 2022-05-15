@@ -16,6 +16,7 @@ import React, {
 import CustomersDropdown from '../../../components/autocomplete/CustomersDropdown';
 import useIsMobile from '../../../hooks/useIsMobile';
 import { ICustomer } from '../../../utils/types';
+import { useStyles } from '../../../styles';
 
 interface ICustomerDetails {
   customerName: string;
@@ -46,13 +47,14 @@ const CustomerDetails = ({
   setOptions,
   options,
 }: ICustomerDetailsProps) => {
+  const classes = useStyles();
   const isMobile = useIsMobile();
   const gridXs = isMobile ? 12 : 4;
   const [isNewCustomer, setIsNewCustomer] = useState<boolean>(true);
 
   return (
     <>
-      <Typography style={{ marginTop: '16px' }} variant='h5'>
+      <Typography className={classes.formTitle} variant='h5'>
         Add customer details
       </Typography>
       <Divider />
