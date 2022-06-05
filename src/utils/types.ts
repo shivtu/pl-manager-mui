@@ -142,14 +142,14 @@ export interface ICreateUserPayload {
 }
 
 export interface ICustomer {
-  _id: string | undefined;
+  _id?: string | undefined;
   customerName: string | undefined;
   customerPhone: number | undefined;
   customerEmail: string | undefined;
   customerAddress?: string | undefined;
   customerOrganization: string | undefined;
-  projects: string[] | undefined;
-  createdAt: Date | undefined;
+  projects?: string[] | undefined;
+  createdAt?: Date | undefined;
 }
 
 export type ProjectTypeTypes =
@@ -185,3 +185,11 @@ export type GovDocTypes =
   | GOV_ID_PROOF_TYPES.PAN_CARD
   | GOV_ID_PROOF_TYPES.PASSPORT
   | GOV_ID_PROOF_TYPES.RATION_CARD;
+
+export interface ICustomerDetails {
+  customerName: string;
+  customerOrganization: string;
+  customerPhone: string;
+  customerEmail: string;
+  customerAddress: string;
+}

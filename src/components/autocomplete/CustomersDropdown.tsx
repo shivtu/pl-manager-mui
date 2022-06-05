@@ -14,6 +14,7 @@ const CustomersDropdown = ({
   setOptions: any;
 }) => {
   const [open, setOpen] = useState(false);
+  const [emptyListMessage, setEmptyListMessgae] = useState<string>();
 
   const appState = useSelector((state: IAppState) => state);
 
@@ -26,7 +27,7 @@ const CustomersDropdown = ({
       const userProfiles = await getCustomers(`${appState.token}`);
 
       const userProfileList: ICustomer[] = userProfiles.data.result;
-
+      if (!userProfileList.length) setEmptyListMessgae('No data available');
       setOptions(userProfileList);
     })();
   }, [loading]);
@@ -36,45 +37,51 @@ const CustomersDropdown = ({
   }, [open]);
 
   return (
-    <Autocomplete
-      size='small'
-      id='asynchronous-cusomer-list'
-      sx={{ minWidth: 196 }}
-      open={open}
-      onOpen={() => {
-        setOpen(true);
-      }}
-      onClose={() => {
-        setOpen(false);
-      }}
-      isOptionEqualToValue={(option, value) =>
-        option.customerName === value.customerName
-      }
-      getOptionLabel={(option) =>
-        `${option.customerName} from ${option.customerOrganization}`
-      }
-      options={options}
-      loading={loading}
-      renderInput={(params) => (
-        <TextField
-          variant='filled'
-          {...params}
-          label='Owner'
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <>
-                {loading ? (
-                  <CircularProgress color='inherit' size={20} />
-                ) : null}
-                {params.InputProps.endAdornment}
-              </>
-            ),
+    <>
+      {!emptyListMessage ? (
+        <Autocomplete
+          size='small'
+          id='asynchronous-cusomer-list'
+          sx={{ minWidth: 196 }}
+          open={open}
+          onOpen={() => {
+            setOpen(true);
           }}
-          helperText={helperText}
+          onClose={() => {
+            setOpen(false);
+          }}
+          isOptionEqualToValue={(option, value) =>
+            option.customerName === value.customerName
+          }
+          getOptionLabel={(option) =>
+            `${option.customerName} from ${option.customerOrganization}`
+          }
+          options={options}
+          loading={loading}
+          renderInput={(params) => (
+            <TextField
+              variant='filled'
+              {...params}
+              label='Owner'
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loading ? (
+                      <CircularProgress color='inherit' size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+              helperText={helperText}
+            />
+          )}
         />
+      ) : (
+        emptyListMessage
       )}
-    />
+    </>
   );
 };
 

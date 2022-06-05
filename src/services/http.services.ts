@@ -2,6 +2,7 @@ import axios from 'axios';
 import {
   ICreateUserPayload,
   ICreateUserProfilePayload,
+  ICustomer,
   INewProjectData,
 } from '../utils/types';
 import { axiosAsyncHandler } from '../utils/errorHandlers';
@@ -33,6 +34,7 @@ export const REST_API_SERVICES = {
   },
   CUSTOMERS: {
     FIND: 'customers/find',
+    CREATE: 'customers/create',
   },
 };
 
@@ -215,5 +217,18 @@ export const createUser = (token: string, userData: ICreateUserPayload) =>
           Authorization: `Bearer ${token}`,
         },
         data: userData,
+      })
+  );
+
+export const createCustomer = (token: string, customerData: ICustomer) =>
+  axiosAsyncHandler(
+    async () =>
+      await axios({
+        method: 'POST',
+        url: `${host}/${REST_API_SERVICES.CUSTOMERS.CREATE}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: customerData,
       })
   );
