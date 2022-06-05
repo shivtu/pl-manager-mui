@@ -49,7 +49,6 @@ const NewEnquiryPage = () => {
   };
 
   const createEnquiry = async () => {
-    console.log('>>>>', options.length);
     if (!options.length) await addNewCustomer();
   };
 
