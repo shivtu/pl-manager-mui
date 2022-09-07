@@ -1,24 +1,26 @@
 import { Autocomplete, CircularProgress, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getCustomers } from '../../services/http.services';
 import { IAppState, ICustomer } from '../../utils/types';
 
 const CustomersDropdown = ({
   helperText,
-  options,
-  setOptions,
+  customerList = [],
+  setCustomerList,
+  setSelectedCustomer,
 }: {
   helperText?: string;
-  options: ICustomer[];
-  setOptions: any;
+  customerList: ICustomer[];
+  setCustomerList: Dispatch<SetStateAction<ICustomer[]>>;
+  setSelectedCustomer: Dispatch<SetStateAction<ICustomer | undefined>>;
 }) => {
   const [open, setOpen] = useState(false);
   const [emptyListMessage, setEmptyListMessgae] = useState<string>();
 
   const appState = useSelector((state: IAppState) => state);
 
-  const loading = open && options.length === 0;
+  const loading = open && customerList.length === 0;
 
   useEffect(() => {
     if (!loading) return undefined;
@@ -28,18 +30,19 @@ const CustomersDropdown = ({
 
       const userProfileList: ICustomer[] = userProfiles.data.result;
       if (!userProfileList.length) setEmptyListMessgae('No data available');
-      setOptions(userProfileList);
+      setCustomerList(userProfileList);
     })();
   }, [loading]);
 
   useEffect(() => {
-    if (!open) setOptions([]);
+    if (!open) setCustomerList([]);
   }, [open]);
 
   return (
     <>
       {!emptyListMessage ? (
         <Autocomplete
+          // onChange={() => console.log('options>>>>>>>>', option)}
           size='small'
           id='asynchronous-cusomer-list'
           sx={{ minWidth: 196 }}
@@ -53,10 +56,11 @@ const CustomersDropdown = ({
           isOptionEqualToValue={(option, value) =>
             option.customerName === value.customerName
           }
-          getOptionLabel={(option) =>
-            `${option.customerName} from ${option.customerOrganization}`
-          }
-          options={options}
+          getOptionLabel={(option) => {
+            setSelectedCustomer(option);
+            return `${option.customerName} from ${option.customerOrganization}`;
+          }}
+          options={customerList}
           loading={loading}
           renderInput={(params) => (
             <TextField

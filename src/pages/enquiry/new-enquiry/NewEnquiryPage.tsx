@@ -32,7 +32,8 @@ const NewEnquiryPage = () => {
     description: '',
   });
 
-  const [options, setOptions] = useState<ICustomer[]>([]);
+  const [customerList, setCustomerList] = useState<ICustomer[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -46,15 +47,18 @@ const NewEnquiryPage = () => {
     };
 
     const newCustomer = await createCustomer(`${appState.token}`, customer);
+    setSelectedCustomer(newCustomer);
   };
 
   const createEnquiry = async () => {
-    if (!options.length) await addNewCustomer();
+    if (!selectedCustomer) await addNewCustomer();
+    console.log('>>><<<!! ', selectedCustomer);
   };
 
   const handleNext = async () => {
     const isLastStep = activeStep === steps.length - 1;
     if (isLastStep) await createEnquiry();
+    // if (isLastStep) console.log('>>>>', customerList);
     setActiveStep(activeStep + 1);
   };
 
@@ -71,8 +75,9 @@ const NewEnquiryPage = () => {
           <CustomerDetails
             customerDetails={customerDetails}
             setCustomerDetails={setCustomerDetails}
-            options={options}
-            setOptions={setOptions}
+            customerList={customerList}
+            setCustomerList={setCustomerList}
+            setSelectedCustomer={setSelectedCustomer}
           />
         );
       case 1:

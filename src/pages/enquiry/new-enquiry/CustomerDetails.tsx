@@ -7,24 +7,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, {
-  BaseSyntheticEvent,
-  Dispatch,
-  SetStateAction,
-  useState,
-} from 'react';
+import { BaseSyntheticEvent, Dispatch, SetStateAction, useState } from 'react';
 import CustomersDropdown from '../../../components/autocomplete/CustomersDropdown';
 import useIsMobile from '../../../hooks/useIsMobile';
-import { ICustomer } from '../../../utils/types';
+import { ICustomer, ICustomerDetails } from '../../../utils/types';
 import { useStyles } from '../../../styles';
-
-interface ICustomerDetails {
-  customerName: string;
-  customerOrganization: string;
-  customerPhone: string;
-  customerEmail: string;
-  customerAddress: string;
-}
 
 interface ICustomerDetailsProps {
   customerDetails: ICustomerDetails;
@@ -37,15 +24,17 @@ interface ICustomerDetailsProps {
       customerAddress: string;
     }>
   >;
-  setOptions: Dispatch<SetStateAction<ICustomer[]>>;
-  options: ICustomer[];
+  setCustomerList: Dispatch<SetStateAction<ICustomer[]>>;
+  customerList: ICustomer[];
+  setSelectedCustomer: Dispatch<SetStateAction<ICustomer | undefined>>;
 }
 
 const CustomerDetails = ({
   customerDetails,
   setCustomerDetails,
-  setOptions,
-  options,
+  setCustomerList,
+  customerList,
+  setSelectedCustomer,
 }: ICustomerDetailsProps) => {
   const classes = useStyles();
   const isMobile = useIsMobile();
@@ -155,8 +144,9 @@ const CustomerDetails = ({
       ) : (
         <CustomersDropdown
           helperText='Select a customer from existing customers'
-          setOptions={setOptions}
-          options={options}
+          setCustomerList={setCustomerList}
+          customerList={customerList}
+          setSelectedCustomer={setSelectedCustomer}
         />
       )}
     </>
