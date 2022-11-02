@@ -10,8 +10,8 @@ import { SvgIconTypeMap } from '@mui/material';
 import CurrentProjectsPages from '../../pages/projects/CurrentProjectsPage';
 import CreateNewProjectPage from '../../pages/projects/CreateNewProjectPage';
 import CompletedProjectsPage from '../../pages/projects/CompletedProjectsPage';
-import PendingDesignsPage from '../../pages/designs/PendingDesignsPage';
-import CompletedDesignsPage from '../../pages/designs/CompletedDesignsPage';
+import PendingDesignsPage from '../../pages/designs/pending-designs/PendingDesignsPage';
+import CompletedDesignsPage from '../../pages/designs/completed-designs/CompletedDesignsPage';
 import PendingPOPage from '../../pages/purchase-orders/PendingPOPage';
 import CompletedPOPage from '../../pages/purchase-orders/CompletedPOPage';
 import AnalyticsPage from '../../pages/analytics/AnalyticsPage';
@@ -20,6 +20,7 @@ import UserManagementPage from '../../pages/user-management/UserManagementPage';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import NewEnquiryPage from '../../pages/enquiry/new-enquiry/NewEnquiryPage';
 import EnquiriesAwaitingApprovalPage from '../../pages/enquiry/awaiting-approval/EnquiriesAwaitingApprovalPage';
+import HomePage from '../../pages/home/HomePage';
 
 export type SideNavItemsType = {
   labelText: string;
@@ -39,6 +40,13 @@ export type SideNavItemsType = {
 };
 
 export const sideNavItems: SideNavItemsType[] = [
+  {
+    labelText: 'Home',
+    labelIcon: QueryStatsIcon,
+    routeTo: '/',
+    allowedRoles: ['admin'],
+    component: <HomePage />,
+  },
   {
     labelText: 'Analytics',
     labelIcon: QueryStatsIcon,
