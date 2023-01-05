@@ -1,35 +1,35 @@
-import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import SideNav from '../components/side-nav/SideNav';
-import { Route, Routes } from 'react-router-dom';
-import useIsMobile from '../hooks/useIsMobile';
-import { useSelector } from 'react-redux';
-import { IAppState } from '../utils/types';
-import LoginPage from './login/LoginPage';
-import CustomAppBar from './CustomAppBar';
-import { sideNavItems } from '../components/side-nav/sideNavHelper';
+import * as React from "react";
+import { styled, useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import SideNav from "../components/side-nav/SideNav";
+import { Route, Routes } from "react-router-dom";
+import useIsMobile from "../hooks/useIsMobile";
+import { useSelector } from "react-redux";
+import { IAppState } from "../utils/types";
+import LoginPage from "./login/LoginPage";
+import CustomAppBar from "./CustomAppBar";
+import { sideNavItems } from "../components/side-nav/sideNavHelper";
 
 const drawerWidth = 240;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme, open }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
-  transition: theme.transitions.create('margin', {
+  transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   marginLeft: `-${drawerWidth}px`,
   ...(open && {
-    transition: theme.transitions.create('margin', {
+    transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -37,13 +37,13 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }),
 }));
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
+  justifyContent: "flex-end",
 }));
 
 export default function ParentContainer() {
@@ -80,7 +80,7 @@ export default function ParentContainer() {
   if (!appState.token) return <LoginPage />;
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <CustomAppBar
         openDrawer={openDrawer}
@@ -93,18 +93,18 @@ export default function ParentContainer() {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
+          "& .MuiDrawer-paper": {
             width: drawerWidth,
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
           },
         }}
-        variant={'persistent'}
-        anchor='left'
+        variant={"persistent"}
+        anchor="left"
         open={openDrawer}
       >
         <DrawerHeader>
           <IconButton onClick={() => setOpenDrawer(false)}>
-            {theme.direction === 'ltr' ? (
+            {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
               <ChevronRightIcon />
